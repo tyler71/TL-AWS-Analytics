@@ -1,0 +1,4 @@
+cache/*
+**/__pycache__/
+mock_s3/*
+*.swp

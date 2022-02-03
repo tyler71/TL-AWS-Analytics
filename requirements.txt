@@ -1,0 +1,6 @@
+numpy
+pandas
+streamlit
+duckdb
+s3fs
+supervisor
