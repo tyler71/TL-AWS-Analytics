@@ -1,8 +1,10 @@
 #!/usr/bin/env sh
-gpasswd -a application tty
 
+# Fix /dev/stdout permissions error
+gpasswd -a application tty
 chmod o+w /dev/stdout /dev/stderr
 
+# Fix supervisor pid permissions error
 for pid in \
   /var/run/supervisord.pid
 do
