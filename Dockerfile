@@ -43,5 +43,6 @@ RUN chown -R application: /app
 
 COPY ./config/supervisord.conf /etc/supervisord.conf
 COPY ./config/init.sh /init.sh
+COPY ./config/oauth.sh /opt/oauth-proxy/
 
 CMD bash /init.sh

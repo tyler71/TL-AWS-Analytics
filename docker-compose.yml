@@ -1,0 +1,15 @@
+version: '3.7'
+services:
+  tlanalytics:
+    image: tlanalyticsproject:latest
+    build:
+      context: .
+    labels:
+      caddy: ${hostname}
+      caddy.reverse_proxy: "{{upstreams ${port}}}"
+    networks:
+      - caddy
+
+networks:
+  caddy:
+    external: true

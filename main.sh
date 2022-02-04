@@ -10,4 +10,4 @@ streamlit run main.py       \
   --server.enableCORS false \
   --server.enableXsrfProtection false \
   --server.headless true    \
-  --server.address 0.0.0.0
+  --server.address 127.0.0.1
