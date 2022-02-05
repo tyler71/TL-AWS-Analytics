@@ -24,10 +24,12 @@ RUN tar -xf oauth.tar.gz                \
 
 FROM python:3.10-slim AS production
 
+ENV DATA_DIR /data
+
 COPY --from=build_app   /usr/local       /usr/local
 COPY --from=build_oauth /opt/oauth-proxy /opt/oauth-proxy
 
-RUN mkdir /app                     \
+RUN mkdir /app /data               \
  && groupadd application           \
       --gid 1000                   \
  && useradd application            \
@@ -39,7 +41,7 @@ RUN mkdir /app                     \
       --system
 
 COPY . /app
-RUN chown -R application: /app
+RUN chown -R application: /app /data
 
 COPY ./config/supervisord.conf /etc/supervisord.conf
 COPY ./config/init.sh /init.sh

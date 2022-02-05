@@ -1,4 +1,4 @@
-import s3fs
+import boto3
 import os
 
 from modules import MultiPage

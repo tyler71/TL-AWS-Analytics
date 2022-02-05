@@ -1,7 +1,6 @@
-#!/usr/bin/env bash
+#!/usr/bin/env sh
 
-current_dir="$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
-export MPLCONFIGDIR=$current_dir/cache/mpl
+export MPLCONFIGDIR=$DATA_DIR/cache/streamlit/mpl
 mkdir -p $MPLCONFIGDIR
 
 echo "Starting server.."

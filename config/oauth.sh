@@ -10,7 +10,7 @@
 # OAUTH2_PROXY_REVERSE_PROXY
 
 
-/opt/oauth-proxy/oauth2-proxy \
-   --upstream=http://127.0.0.1:8000/ \
-   --http-address="http://0.0.0.0:4081"
+/opt/oauth-proxy/oauth2-proxy           \
+   --upstream="http://127.0.0.1:8000/"  \
+   --http-address="http://0.0.0.0:4180"
 
