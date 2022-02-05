@@ -16,14 +16,14 @@ def get_file(filename: str) -> list:
     json_objects = [json.loads(x) for x in raw_str.split('\0')]
   return json_objects
 
-@st.cache(persist=True, ttl=600)
-def get_files(dir):
-  json_files = glob.glob(f"{dir}/*", recursive=True)
+# @st.cache(persist=True, ttl=600)
+def get_files():
+  json_files = glob.glob("mock_s3/*", recursive=False)
   json_data = list()
   for fo in json_files:
     json_data += get_file(fo)
   return json_data
 
-def get_dataframe(dir="mock_s3"):
-  df = pd.read_json(json.dumps(get_files(dir)))
+def get_dataframe():
+  df = pd.read_json(json.dumps(get_files()))
   return df
