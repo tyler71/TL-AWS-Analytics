@@ -22,7 +22,7 @@ RUN tar -xf oauth.tar.gz                \
  && rm oauth.tar.gz
 
 
-FROM python:3.10-slim
+FROM python:3.10-slim AS production
 
 COPY --from=build_app   /usr/local       /usr/local
 COPY --from=build_oauth /opt/oauth-proxy /opt/oauth-proxy

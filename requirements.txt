@@ -1,6 +1,7 @@
+boto3
+duckdb
 numpy
 pandas
 streamlit
-duckdb
-boto3
 supervisor
+
