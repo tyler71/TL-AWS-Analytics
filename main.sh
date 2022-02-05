@@ -1,6 +1,7 @@
 #!/usr/bin/env sh
 
 export MPLCONFIGDIR=$DATA_DIR/cache/streamlit/mpl
+export HOME=/data/
 mkdir -p $MPLCONFIGDIR
 
 echo "Starting server.."

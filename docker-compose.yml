@@ -7,6 +7,8 @@ services:
     labels:
       caddy: ${hostname}
       caddy.reverse_proxy: "{{upstreams ${port}}}"
+    volumes:
+      - "./data/app:/data"
     env_file:
       - oauth.env
     networks:

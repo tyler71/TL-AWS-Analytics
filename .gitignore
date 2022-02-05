@@ -4,3 +4,4 @@ mock_s3/*
 *.swp
 *.env
 .idea/*
+data/*

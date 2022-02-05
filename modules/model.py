@@ -18,7 +18,7 @@ def get_file(filename: str) -> list:
 
 # @st.cache(persist=True, ttl=600)
 def get_files():
-  json_files = glob.glob("mock_s3/*", recursive=False)
+  json_files = glob.glob("/data/s3/*", recursive=False)
   json_data = list()
   for fo in json_files:
     json_data += get_file(fo)
