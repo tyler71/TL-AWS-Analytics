@@ -6,6 +6,6 @@ mkdir -p $MPLCONFIGDIR
 
 echo "Starting server.."
 streamlit run main.py        \
-  --server.port 8000         \
+  --server.port 8501         \
   --server.headless true     \
   --server.address 127.0.0.1

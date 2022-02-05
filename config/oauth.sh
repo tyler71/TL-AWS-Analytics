@@ -11,6 +11,6 @@
 
 
 /opt/oauth-proxy/oauth2-proxy           \
-   --upstream="http://127.0.0.1:8000/"  \
+   --upstream="http://127.0.0.1:8501/"  \
    --http-address="http://0.0.0.0:4180"
 
