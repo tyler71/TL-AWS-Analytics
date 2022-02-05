@@ -30,6 +30,6 @@ jobs:
         with:
           context: .
           push: true
-          tags: ghcr.io/${{ github.actor }}/tlanalytics:latest
+          tags: ghcr.io/${{ github.actor }}/tl-aws-analytics:latest
           cache-from: type=gha
           cache-to: type=gha,mode=max

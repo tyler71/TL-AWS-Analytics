@@ -1,7 +1,7 @@
 version: '3.7'
 services:
   tlanalytics:
-    image: ghcr.io/tyler71/tlanalytics:latest
+    image: ghcr.io/tyler71/tl-aws-analytics:latest
     build:
       context: .
     labels:
