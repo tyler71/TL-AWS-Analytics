@@ -2,6 +2,9 @@ import json
 import glob
 import pandas as pd
 import streamlit as st
+import os
+
+mock_data = os.getenv("MOCK_DATA_DIR", False):
 
 @st.cache(persist=True, ttl=2_620_800) # 1 month
 def get_file(filename: str) -> list:
@@ -23,6 +26,16 @@ def get_files():
   for fo in json_files:
     json_data += get_file(fo)
   return json_data
+
+if mock_data:
+  def get_files():
+    json_files = glob.glob(mock_data, recursive=True)
+    json_data = list()
+    for fo in json_files:
+      json_data += get_file(fo)
+    return json_data
+
+
 
 def get_dataframe():
   df = pd.read_json(json.dumps(get_files()))

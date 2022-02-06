@@ -10,7 +10,7 @@ services:
     volumes:
       - "./data/app:/data"
     env_file:
-      - oauth.env
+      - app.env
     networks:
       - caddy
 
