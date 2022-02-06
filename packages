@@ -2,4 +2,4 @@ numpy
 pandas
 streamlit
 duckdb
-s3fs
+boto3
