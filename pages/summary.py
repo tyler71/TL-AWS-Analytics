@@ -12,6 +12,9 @@ MENUS="menuoptionselected"
 def app():
   df = modules.model.get_dataframe()
 
+  st.header("Input")
+  st.date_input('Your birthday')
+
   st.header("Most Common Flows")
   st.bar_chart(count_common_array(df, FLOWS))
 

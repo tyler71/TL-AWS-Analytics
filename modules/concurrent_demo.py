@@ -3,9 +3,9 @@ import os
 import time
 
 def get_files(dir):
-    for dirpath, dirnames, filenames in os.walk(dir):
-        if filenames:
-            yield from filenames
+  for dirpath, dirnames, filenames in os.walk(dir):
+    if filenames:
+      yield from filenames
 def get_files(dir):
     for j in range(250):
         #time.sleep(0.2)
