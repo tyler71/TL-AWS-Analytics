@@ -16,6 +16,7 @@ def app():
   st.date_input('Your birthday')
 
   st.header("Most Common Flows")
+  
   st.bar_chart(count_common_array(df, FLOWS))
 
   st.header("Most Common Menu Options")
