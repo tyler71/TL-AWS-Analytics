@@ -7,14 +7,23 @@ from collections import Counter
 
 # @st.experimental_memo(persist="disk", ttl=600)
 def count_common_array(df: pd.DataFrame, col: str) -> pd.Series:
-  """
-  arr = Where in the df the array is
-  ["a", "b", "b", "c"] = ["a": 1, "b": 2, "c": 1]
-  """
+  # """
+  # arr = Where in the df the array is
+  # ["a", "b", "b", "c"] = ["a": 1, "b": 2, "c": 1]
+  # """
+#   query = """
+# SELECT UNNEST({expanded_col}) {col}, COUNT(1) "Count"
+#   FROM df 
+# GROUP BY {col}
+#   """.format(col=col, expanded_col=list(col))
+#   print(query)
+#   query = duckdb.query(query).to_df()
+#   return query
   most_common_arrays = df[col].sum()
   most_common_arrays = pd.Series(Counter(most_common_arrays))
   return most_common_arrays
 
+@st.experimental_memo(persist="disk", ttl=600)
 def count_caller_hangups(data: pd.DataFrame) -> pd.Series:
   df = data
   query = """
@@ -26,6 +35,6 @@ SELECT attributes_lastflow "Last Flow",
  GROUP BY attributes_lastflow
 """
   query = duckdb.query(query).to_df()
-  list(query)
+  # list(query)
   # query = pd.Series(query)
   return query

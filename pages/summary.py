@@ -13,7 +13,7 @@ def app():
 
   metric_type = st.radio('Metric', ["Recent", "Historical"])
   if metric_type == "Historical":
-    days = st.slider('How many days ago', 1, 364, value=30, step=7)
+    days = st.slider('How many days ago', 0, 364, value=30, step=10)
   elif metric_type == "Recent":
     minutes = st.slider('How many minutes ago', 0, 480, value=15, step=15)
     days = 0
