@@ -10,6 +10,9 @@ MENUS="menuoptionselected"
 
 def app():
   df = modules.model.get_dataframe()
+  if df.empty:
+    st.error("No data available!")
+    st.stop()
 
   st.header("Most Common Flows")
   st.dataframe(count_common_array(df, FLOWS), height=600, width=600)

@@ -5,7 +5,7 @@ import duckdb
 
 from collections import Counter
 
-@st.experimental_memo(persist="disk", ttl=600)
+# @st.experimental_memo(persist="disk", ttl=600)
 def count_common_array(df: pd.DataFrame, col: str) -> pd.Series:
   """
   arr = Where in the df the array is

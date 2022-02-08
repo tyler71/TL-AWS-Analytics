@@ -10,10 +10,26 @@ FLOWS="flowsaccessed"
 MENUS="menuoptionselected"
 
 def app():
-  df = modules.model.get_dataframe()
 
-  st.header("Input")
-  st.date_input('Your birthday')
+  metric_type = st.radio('Metric', ["Recent", "Historical"])
+  if metric_type == "Historical":
+    days = st.slider('How many days ago', 1, 364, value=30, step=7)
+  elif metric_type == "Recent":
+    minutes = st.slider('How many minutes ago', 0, 480, value=15, step=15)
+    days = 0
+
+  df = modules.model.get_dataframe(days)
+  if df.empty:
+    st.error("No data available!")
+    st.stop()
+
+  if metric_type == "Recent":
+    df['initiationtimestamp'] = pd.to_datetime(df['initiationtimestamp'])
+    df = df[df['initiationtimestamp'].diff().lt(f'{minutes}Min')]
+
+  if df.empty:
+    st.error("No data available!")
+    st.stop()
 
   st.header("Most Common Flows")
   
