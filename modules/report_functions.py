@@ -12,10 +12,10 @@ def count_common_array(df: pd.DataFrame, col: str) -> pd.Series:
   # ["a", "b", "b", "c"] = ["a": 1, "b": 2, "c": 1]
   # """
 #   query = """
-# SELECT UNNEST({expanded_col}) {col}, COUNT(1) "Count"
+# SELECT UNNEST(col) {col}, COUNT(1) "Count"
 #   FROM df 
 # GROUP BY {col}
-#   """.format(col=col, expanded_col=list(col))
+#   """.format(col=col)
 #   print(query)
 #   query = duckdb.query(query).to_df()
 #   return query

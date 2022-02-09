@@ -1,17 +1,20 @@
+import concurrent.futures
 import json
-import pandas as pd
+import logging
 import os
+import pandas as pd
 import streamlit as st
 import typing
-import concurrent.futures
 
 from modules.helper import get_window_days
 
+logger = logging.getLogger(__name__)
 
 # Each file can have multiple JSON objects in it.
 # We split up the JSON objects and yield them
 # one at a time
 def extract_from_file(data: str) -> str:
+  logger.debug(f"extract_from_file: {data}")
   if '}{' in data:
     raw_str = data.replace('}{', '}\0{')
   elif '}\n{' in data:
@@ -30,12 +33,14 @@ mock_data = os.getenv("MOCK_DATA_DIR", False)
 if mock_data:
   def get_files(days: int):
       for dir_day in get_window_days(days, prefix=mock_data):
+          logger.info(f"get_files: Retrieving files from {dir_day}")
           yield from get_dir(dir_day)
-  @st.experimental_memo(persist="disk", ttl=600)
+  # @st.experimental_memo(persist="disk", ttl=600)
   def get_dir(dir_day):
-      print(f'loading {dir_day}')
       if(os.path.isdir(dir_day)):
           return [os.path.join(dir_day, f) for f in os.listdir(dir_day)]
+      else:
+          return tuple()
 
 
 
@@ -54,14 +59,13 @@ def load_files(days: int) -> typing.Generator[str, None, None]:
 def load_file(filename: str) -> typing.List[str]:
   with open(filename) as f:
     data = f.read()
-    print(f"loading {filename}")
+    logger.info(f"load_file: loading {filename}")
     return [obj for obj in extract_from_file(data)]
 
 
 #@st.experimental_memo(persist="disk", ttl=600)
 def get_dataframe(days=30) -> pd.DataFrame:
-  # Good for a lot of small files
+  # We load all of the files up to days ago, convert to a list and join with
+  # newlines. This is read into a dataframe with pandas
   df = pd.read_json('\n'.join(list(load_files(days))), lines=True)
-  # Good for a lot of large files
-  # df = pd.concat(pd.read_json(json_object, lines=True) for json_object in load_files())
   return df
