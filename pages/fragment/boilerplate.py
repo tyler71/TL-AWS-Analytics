@@ -4,11 +4,14 @@ import streamlit as st
 from modules import model
 from modules.helper import minutes_to_hour_minutes
 
+RECENT_METRIC    = "Today"
+HISTORICAL_METRIC = "Historical"
+
 def boilerplate():
-    metric_type = st.radio('Metric', ["Recent", "Historical"])
-    if metric_type == "Historical":
+    metric_type = st.radio('Metric', [RECENT_METRIC, HISTORICAL_METRIC])
+    if metric_type == HISTORICAL_METRIC:
         days = st.slider('How many days ago', 0, 364, value=30, step=10)
-    elif metric_type == "Recent":
+    elif metric_type == RECENT_METRIC:
         minutes = st.slider("How many minutes ago", 0, 480, value=15, step=15)
         if minutes >= 60:
             st.write(minutes_to_hour_minutes(minutes))
@@ -29,3 +32,9 @@ def boilerplate():
         df = df[df[model.INITTIMESTAMP].diff().lt(f'{minutes}Min')]
 
     return df
+
+def add_widget(df, widget):
+  if df.empty:
+    st.info("Empty")
+  else:
+    widget(df)

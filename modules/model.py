@@ -1,5 +1,3 @@
-import concurrent.futures
-import json
 import logging
 import os
 import pandas as pd

@@ -1,15 +1,25 @@
 import streamlit as st
+from functools import partial
 
 from modules import model
 from modules.report_functions import count_common_array, count_caller_hangups
-from pages.boilerplate import boilerplate
+from pages.fragment.boilerplate import boilerplate, add_widget
 
 def app():
 
+  # Here we load the global settin widgets (sliders, and such)
+  # It returns the dataframe which has the data we need
   df = boilerplate()
 
+  # Partials are a good way to pass a _partially_ filled function into
+  # another function. Here, we preset the height and width to 600
+  # This is similar to st.dataframe(df, height=600, width=600)
+  # Since we use add_widget, which has logic for checking the widget
+  # This makes everything play nice
+  partial_dataframe_widget = partial(st.dataframe, height=600, width=600)
+
   st.header("Most Common Flows")
-  st.dataframe(count_common_array(df, model.FLOWS), height=600, width=600)
+  add_widget(count_common_array(df, model.FLOWS), partial_dataframe_widget)
 
   st.header("Most Common Menu Options")
-  st.dataframe(count_common_array(df, model.MENUS), height=600, width=600)
+  add_widget(count_common_array(df, model.MENUS), partial_dataframe_widget)
