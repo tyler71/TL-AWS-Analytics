@@ -8,6 +8,10 @@ import typing
 
 from modules.helper import get_window_days
 
+FLOWS         = "flowsaccessed"
+MENUS         = "menuoptionselected"
+INITTIMESTAMP = "initiationtimestamp"
+
 logger = logging.getLogger(__name__)
 
 # Each file can have multiple JSON objects in it.
@@ -37,7 +41,7 @@ if mock_data:
           yield from get_dir(dir_day)
   # @st.experimental_memo(persist="disk", ttl=600)
   def get_dir(dir_day):
-      if(os.path.isdir(dir_day)):
+      if os.path.isdir(dir_day):
           return [os.path.join(dir_day, f) for f in os.listdir(dir_day)]
       else:
           return tuple()
@@ -65,7 +69,7 @@ def load_file(filename: str) -> typing.List[str]:
 
 #@st.experimental_memo(persist="disk", ttl=600)
 def get_dataframe(days=30) -> pd.DataFrame:
-  # We load all of the files up to days ago, convert to a list and join with
+  # We load all the files up to days ago, convert to a list and join with
   # newlines. This is read into a dataframe with pandas
   df = pd.read_json('\n'.join(list(load_files(days))), lines=True)
   return df
