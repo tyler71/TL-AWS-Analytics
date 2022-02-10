@@ -3,7 +3,7 @@ name: Build and upload docker image
 on:
   push:
     branches:
-    - production
+    - dev
 
 jobs:
   deploy:
