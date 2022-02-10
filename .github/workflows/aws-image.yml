@@ -45,8 +45,8 @@ jobs:
           context: .
           push: false
           tags: |
-            $ECR_REGISTRY/$ECR_REPOSITORY:latest
-            $ECR_REGISTRY/$ECR_REPOSITORY:${{ steps.v.outputs.date }}
+            ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:latest
+            ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:${{ steps.v.outputs.date }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
           
