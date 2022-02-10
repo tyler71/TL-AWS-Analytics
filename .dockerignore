@@ -4,3 +4,7 @@ cache/
 .git/
 .github/
 .gitignore
+docker-compose.yml
+app.env.example
+data/
+s3/

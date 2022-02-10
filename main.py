@@ -15,9 +15,13 @@ import streamlit as st
 ####
 
 loglevel = os.environ.get('LOGLEVEL', 'WARNING').upper()
-logging.basicConfig(level=loglevel)
+
+logger = logging.getLogger()
+logger.setLevel(loglevel)
+
 
 def main():
+
   app = MultiPage.MultiPage()
   config()
 
@@ -38,4 +42,5 @@ def config():
   )
 
 if __name__ == '__main__':
+  logger.info(logging.getLevelName(logger.getEffectiveLevel()))
   main()

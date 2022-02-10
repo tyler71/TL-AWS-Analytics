@@ -14,7 +14,7 @@ logger = logging.getLogger(__name__)
 # We split up the JSON objects and yield them
 # one at a time
 def extract_from_file(data: str) -> str:
-  logger.debug(f"extract_from_file: {data}")
+  logger.debug(f"extract_from_file:\n{data}")
   if '}{' in data:
     raw_str = data.replace('}{', '}\0{')
   elif '}\n{' in data:
