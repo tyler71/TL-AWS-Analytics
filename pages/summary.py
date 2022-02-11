@@ -1,7 +1,7 @@
 import streamlit as st
 
-from modules.report_functions import count_common_array
-from modules.report_functions import count_caller_hangups
+from reports.count_common_array import count_common_array
+from reports.count_caller_hangups import count_caller_hangups
 from pages.fragment.boilerplate import boilerplate, add_widget
 
 # Here we define the expected JSON structure

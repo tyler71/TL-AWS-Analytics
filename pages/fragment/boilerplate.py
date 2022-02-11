@@ -4,10 +4,14 @@ import streamlit as st
 from modules import model
 from modules.helper import minutes_to_hour_minutes
 
+# This fragment is loaded on (all?) pages and provides
+# the global settings. Eg, recent metrics versus historical
+# it returns a pandas DataFrame
+
 RECENT_METRIC    = "Today"
 HISTORICAL_METRIC = "Historical"
 
-def boilerplate():
+def boilerplate() -> pd.DataFrame:
     metric_type = st.radio('Metric', [RECENT_METRIC, HISTORICAL_METRIC])
     if metric_type == HISTORICAL_METRIC:
         days = st.slider('How many days ago', 0, 364, value=30, step=10)

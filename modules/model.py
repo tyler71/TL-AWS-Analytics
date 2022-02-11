@@ -5,10 +5,19 @@ import streamlit as st
 import typing
 
 from modules.helper import get_window_days
+from modules.S3Bucket import getS3Bucket
 
 FLOWS         = "flowsaccessed"
 MENUS         = "menuoptionselected"
 INITTIMESTAMP = "initiationtimestamp"
+
+## Here we either use the S3 implementation or mock
+# if bucket_* is set it will use S#
+# If mock_data is set, it will use mock
+# Mock overrides S3
+bucket_name   = os.getenv("BUCKET_NAME", False)
+bucket_prefix = os.getenv("BUCKET_PREFIX", False)
+mock_data     = os.getenv("MOCK_DATA_DIR", False)
 
 logger = logging.getLogger(__name__)
 
@@ -26,48 +35,66 @@ def extract_from_file(data: str) -> str:
   yield from raw_str.split('\0')
 
 
-# Do we have mock data to work with?
-# If so, use that directory
-mock_data = os.getenv("MOCK_DATA_DIR", False)
+if bucket_name and bucket_prefix:
+  def get_files(days: int) -> typing.Generator[str, None, None]:
+    for dir_day in get_window_days(days, prefix=bucket_prefix):
+      logger.debug(f"s3 get_files: Retrieving files from {dir_day}")
+      yield from get_dir(dir_day)
+  # We download all the data before returning, should be cached
+  # @st.experimental_memo(persist="disk", ttl=600)
+  @st.experimental_memo(persist="disk", ttl=900)
+  def get_dir(dir_day) -> typing.List[str]:
+    bucket = getS3Bucket()
+    objs = bucket.objects.filter(Prefix=dir_day)
+    # Here we load the object from S3
+    # decode it and put it into a list
+    result = [obj.get()['Body'].read().decode() for obj in objs] 
+    logger.debug(f"s3 get_dir: {result}")
+    return result
+
 
 # Mock data for developing with
 # These functions simulate a S3 bucket
 if mock_data:
-  def get_files(days: int):
+  def get_files(days: int) -> typing.Generator[str, None, None]:
       for dir_day in get_window_days(days, prefix=mock_data):
-          logger.info(f"get_files: Retrieving files from {dir_day}")
+          logger.debug(f"mock get_files: Retrieving files from {dir_day}")
           yield from get_dir(dir_day)
-  # @st.experimental_memo(persist="disk", ttl=600)
-  def get_dir(dir_day):
+  @st.experimental_memo(persist="disk", ttl=900)
+  def get_dir(dir_day) -> typing.List[str]:
       if os.path.isdir(dir_day):
-          return [os.path.join(dir_day, f) for f in os.listdir(dir_day)]
+          filepaths = (os.path.join(dir_day, f) for f in os.listdir(dir_day))
+
+          files = list()
+          for filepath in filepaths:
+            for obj in load_file(filepath):
+              files.append(obj)
+
+          result = files
+          logging.info(f"mock get_dir: {dir_day} cached")
+          logging.debug(f"mock get_dir: {result}")
+          return result
+          # return result
       else:
-          return tuple()
-
-
+          return list()
+  def load_file(filename: str) -> typing.List[str]:
+    with open(filename) as f:
+      data = f.read()
+      logger.debug(f"load_file: {filename} cached")
+      return [obj for obj in extract_from_file(data)]
 
 # Loads each file. Splits the load_file request into multiple threads
 # each load_file can have a series of json_objects, so we iterate over it
 def load_files(days: int) -> typing.Generator[str, None, None]:
-  for day in get_files(days):
-    yield from load_file(day)
+  yield from get_files(days)
   #   futures = exec.map(load_file, get_files(days))
   #   for future in futures:
   #     yield from future
 
-# This takes a given local file and returns a tuple
-# of JSON objects
-@st.experimental_memo(persist="disk", ttl=600)
-def load_file(filename: str) -> typing.List[str]:
-  with open(filename) as f:
-    data = f.read()
-    logger.info(f"load_file: loading {filename}")
-    return [obj for obj in extract_from_file(data)]
-
-
-#@st.experimental_memo(persist="disk", ttl=600)
+@st.experimental_memo(persist="disk", ttl=30)
 def get_dataframe(days=30) -> pd.DataFrame:
   # We load all the files up to days ago, convert to a list and join with
   # newlines. This is read into a dataframe with pandas
+  logger.debug(f"load_file: {days} days cached")
   df = pd.read_json('\n'.join(list(load_files(days))), lines=True)
   return df

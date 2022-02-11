@@ -2,8 +2,10 @@ import streamlit as st
 from functools import partial
 
 from modules import model
-from modules.report_functions import count_common_array, count_caller_hangups
 from pages.fragment.boilerplate import boilerplate, add_widget
+
+from reports.count_common_array import count_common_array
+from reports.count_caller_hangups import count_caller_hangups
 
 def app():
 

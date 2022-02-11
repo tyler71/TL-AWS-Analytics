@@ -36,6 +36,4 @@ def minutes_to_hour_minutes(minutes: int) -> str:
         msg += f" {minutes} minutes"
 
     return msg
-
-
-    return hours, minutes
+    

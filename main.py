@@ -15,9 +15,11 @@ import streamlit as st
 ####
 
 loglevel = os.environ.get('LOGLEVEL', 'WARNING').upper()
+logging.basicConfig(level=loglevel)
 
 logger = logging.getLogger()
-logger.setLevel(loglevel)
+
+
 
 
 def main():
