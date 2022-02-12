@@ -40,11 +40,11 @@ RUN mkdir /app /data               \
       --gid 1000                   \
       --system
 
-COPY . /app
+COPY ./app /app
 RUN chown -R application: /app /data
 
 COPY ./config/supervisord.conf /etc/supervisord.conf
-COPY ./config/init.sh /init.sh
-COPY ./config/oauth.sh /opt/oauth-proxy/
+COPY ./config/init.sh          /init.sh
+COPY ./config/oauth.sh         /opt/oauth-proxy/
 
 CMD bash /init.sh

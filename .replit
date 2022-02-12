@@ -1,1 +1,1 @@
-run = "bash main.sh"
+run = "bash app/main.sh"
