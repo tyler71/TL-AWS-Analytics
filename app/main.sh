@@ -12,6 +12,12 @@ unset DISPLAY
 # STREAMLIT_BROWSER_SERVERADDRESS   = "https://domain.tld"
 # STREAMLIT_CLIENT_SHOWERRORDETAILS = "false"
 
+# If Server Address is not set, but is running under Supervisor,
+# set Server Address to 127.0.0.1
+if [ -z ${STREAMLIT_SERVER_ADDRESS+x} ] && [ -n ${SUPERVISOR_ENABLED} ]; then
+  export STREAMLIT_SERVER_ADDRESS=127.0.0.1
+fi
+
 echo "Starting server.."
 streamlit run main.py        \
   --server.headless true
