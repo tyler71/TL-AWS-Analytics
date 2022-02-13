@@ -4,4 +4,4 @@ numpy
 pandas
 streamlit
 supervisor
-
+supervisor_checks
