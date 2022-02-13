@@ -91,10 +91,10 @@ def load_files(days: int) -> typing.Generator[str, None, None]:
   #   for future in futures:
   #     yield from future
 
-@st.experimental_memo(persist="disk", ttl=30)
+@st.experimental_memo(persist="disk", ttl=300)
 def get_dataframe(days=30) -> pd.DataFrame:
   # We load all the files up to days ago, convert to a list and join with
   # newlines. This is read into a dataframe with pandas
-  logger.debug(f"load_file: {days} days cached")
+  logger.info(f"get_dataframe: {days} days cached")
   df = pd.read_json('\n'.join(list(load_files(days))), lines=True)
   return df
