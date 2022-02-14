@@ -22,5 +22,6 @@ fi
 
 echo "Starting server.."
 streamlit run "$script_dir"/main.py        \
-  --server.enableCORS true                 \
+  --server.enableCORS false                \
+  --server.enableWebsocketCompression false
   --server.headless   true
