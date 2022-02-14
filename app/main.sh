@@ -22,4 +22,5 @@ fi
 
 echo "Starting server.."
 streamlit run "$script_dir"/main.py        \
-  --server.headless true
+  --server.enableCORS true                 \
+  --server.headless   true
