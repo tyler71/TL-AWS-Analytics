@@ -1,5 +1,7 @@
 #!/usr/bin/env sh
 
+script_dir="$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
+
 export MPLCONFIGDIR=$HOME/cache/streamlit/mpl
 mkdir -p $MPLCONFIGDIR
 
@@ -19,5 +21,5 @@ if [ -z ${STREAMLIT_SERVER_ADDRESS+x} ] && [ -n ${SUPERVISOR_ENABLED} ]; then
 fi
 
 echo "Starting server.."
-streamlit run main.py        \
+streamlit run "$script_dir"/main.py        \
   --server.headless true
