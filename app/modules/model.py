@@ -11,6 +11,17 @@ FLOWS         = "flowsaccessed"
 MENUS         = "menuoptionselected"
 INITTIMESTAMP = "initiationtimestamp"
 
+
+## Data loading
+# The outcome here is to load a dataframe
+# To get this, we call load_files, which calls get_files
+# get_files operates by directory and calls get_dir
+# get_dir returns the strings of all objects found
+# by calling extract_from_file. More than one object may
+# be in a file
+# It is broken up to allow caching at different levels
+# Generators cannot be cached.
+
 ## Here we either use the S3 implementation or mock
 # if bucket_* is set it will use S#
 # If mock_data is set, it will use mock
