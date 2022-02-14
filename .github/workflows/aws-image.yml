@@ -64,7 +64,7 @@ jobs:
           region: ${{ secrets.AWS_REGION }}
           cpu : 1
           memory : 2
-          wait-for-service-stability: true
+          wait-for-service-stability: false
       
-      - name: App Runner output
-        run: echo "App runner output ${{ steps.deploy-apprunner.outputs.service-id }}" 
+#      - name: App Runner output
+#        run: echo "App runner output ${{ steps.deploy-apprunner.outputs.service-id }}" 
