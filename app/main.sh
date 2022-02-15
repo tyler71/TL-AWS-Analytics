@@ -22,7 +22,8 @@ fi
 
 echo "Starting server.."
 cd "$script_dir"
-streamlit run main.py        \
-  --server.enableCORS false                \
-  --server.enableWebsocketCompression false
-  --server.headless   true
+streamlit run main.py                       \
+  --server.enableCORS                 false \
+  --server.enableXsrfProtection       false \
+  --server.enableWebsocketCompression false \
+  --server.headless                   true
