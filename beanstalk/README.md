@@ -1,0 +1,1 @@
+This directory should be zipped and used as the deployment source package for beanstalk

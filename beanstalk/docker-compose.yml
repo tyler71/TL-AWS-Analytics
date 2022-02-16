@@ -1,0 +1,9 @@
+
+services:
+  tlanalytics:
+    image: ghcr.io/tyler71/tl-aws-analytics:latest
+    ports:
+      - 80:8080
+      - 443:4443
+    env_file:
+      - .env

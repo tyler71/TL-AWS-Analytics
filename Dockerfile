@@ -22,12 +22,26 @@ RUN tar -xf oauth.tar.gz                \
  && rm oauth.tar.gz
 
 
+FROM python:3.10-slim AS build_reverse_proxy
+
+RUN apt-get update \
+ && apt-get -y install wget \
+ && rm -r /var/lib/apt/lists/*
+
+ WORKDIR /tmp/download-reverse-proxy
+ RUN wget "https://github.com/caddyserver/caddy/releases/download/v2.4.6/caddy_2.4.6_linux_amd64.tar.gz" -O reverse_proxy.tar.gz
+ RUN tar -xf reverse_proxy.tar.gz       \
+ && mv caddy /opt/reverse_proxy         \
+ && rm reverse_proxy.tar.gz
+
+
 FROM python:3.10-slim AS production
 
 ENV DATA_DIR /data
 
-COPY --from=build_app   /usr/local       /usr/local
-COPY --from=build_oauth /opt/oauth-proxy /opt/oauth-proxy
+COPY --from=build_app           /usr/local         /usr/local
+COPY --from=build_oauth         /opt/oauth-proxy   /opt/oauth-proxy
+COPY --from=build_reverse_proxy /opt/reverse_proxy /opt/reverse_proxy
 
 RUN mkdir /app /data               \
  && groupadd application           \
@@ -46,5 +60,6 @@ RUN chown -R application: /app /data
 COPY ./config/supervisord.conf /etc/supervisord.conf
 COPY ./config/init.sh          /init.sh
 COPY ./config/oauth.sh         /opt/oauth-proxy/
+COPY ./config/Caddyfile        /etc/Caddyfile
 
 CMD bash /init.sh
