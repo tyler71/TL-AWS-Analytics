@@ -51,21 +51,21 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
           
-      - name: Deploy to App Runner Image
-        id: deploy-apprunner
-        uses: awslabs/amazon-app-runner-deploy@main
-        env:
-          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          ECR_REPOSITORY: ${{ steps.v.outputs.reponame }}
-        with:
-          service: ${{ secrets.APP_RUNNER_SERVICE_NAME }}
-          image: ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:${{ steps.v.outputs.date }}
-          access-role-arn: ${{ secrets.ROLE_ARN }}
-          region: ${{ secrets.AWS_REGION }}
-          cpu : 1
-          memory : 2
-          port: 8501
-          wait-for-service-stability: false
+#      - name: Deploy to App Runner Image
+#        id: deploy-apprunner
+#        uses: awslabs/amazon-app-runner-deploy@main
+#        env:
+#          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+#          ECR_REPOSITORY: ${{ steps.v.outputs.reponame }}
+#        with:
+#          service: ${{ secrets.APP_RUNNER_SERVICE_NAME }}
+#          image: ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:${{ steps.v.outputs.date }}
+#          access-role-arn: ${{ secrets.ROLE_ARN }}
+#          region: ${{ secrets.AWS_REGION }}
+#          cpu : 1
+#          memory : 2
+#          port: 8501
+#          wait-for-service-stability: false
       
 #      - name: App Runner output
 #        run: echo "App runner output ${{ steps.deploy-apprunner.outputs.service-id }}" 
