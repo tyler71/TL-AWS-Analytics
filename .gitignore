@@ -5,3 +5,5 @@ s3/*
 *.env
 .idea/*
 data/*
+
+beanstalk/*.zip
