@@ -5,5 +5,8 @@ services:
     ports:
       - 80:8080
       - 443:4443
+    labels:
+      caddy: "${hostname}"
+      caddy.reverse_proxy: "localhost:4180"
     env_file:
       - .env

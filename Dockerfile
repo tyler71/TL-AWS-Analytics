@@ -22,17 +22,13 @@ RUN tar -xf oauth.tar.gz                \
  && rm oauth.tar.gz
 
 
-FROM python:3.10-slim AS build_reverse_proxy
+FROM caddy:builder AS build_reverse_proxy
+ENV XCADDY_SKIP_CLEANUP=1
 
-RUN apt-get update \
- && apt-get -y install wget \
- && rm -r /var/lib/apt/lists/*
+RUN xcaddy build v2.4.6
 
- WORKDIR /tmp/download-reverse-proxy
- RUN wget "https://github.com/caddyserver/caddy/releases/download/v2.4.6/caddy_2.4.6_linux_amd64.tar.gz" -O reverse_proxy.tar.gz
- RUN tar -xf reverse_proxy.tar.gz       \
- && mv caddy /opt/reverse_proxy         \
- && rm reverse_proxy.tar.gz
+RUN mkdir -p /opt/reverse_proxy  \
+&& mv /usr/bin/caddy /opt/reverse_proxy/caddy
 
 
 FROM python:3.10-slim AS production
