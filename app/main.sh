@@ -1,6 +1,6 @@
-#!/usr/bin/env sh
+#!/usr/bin/env bash
 
-script_dir="/app"
+script_dir="$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 
 export MPLCONFIGDIR=$HOME/cache/streamlit/mpl
 mkdir -p $MPLCONFIGDIR
@@ -25,5 +25,4 @@ cd "$script_dir"
 streamlit run main.py                       \
   --server.enableCORS                 false \
   --server.enableXsrfProtection       false \
-  --server.enableWebsocketCompression false \
   --server.headless                   true
