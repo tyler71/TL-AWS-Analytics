@@ -13,13 +13,6 @@ import streamlit as st
 # Reports use a pandas DataFrame, which is requested from module.model.get_dataframe
 ####
 
-loglevel = os.environ.get('LOGLEVEL', 'WARNING').upper()
-logging.basicConfig(level=loglevel)
-
-logger = logging.getLogger()
-
-
-
 
 def main():
 
@@ -43,5 +36,11 @@ def config():
   )
 
 if __name__ == '__main__':
+  loglevel = os.environ.get('LOGLEVEL', 'WARNING').upper()
+  level = logging.getLevelName(loglevel)
+  
+  logger = logging.getLogger()
+  logger.setLevel(level)
+  
   logger.info(logging.getLevelName(logger.getEffectiveLevel()))
   main()

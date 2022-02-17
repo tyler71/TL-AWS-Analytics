@@ -30,7 +30,7 @@ bucket_name   = os.getenv("BUCKET_NAME", False)
 bucket_prefix = os.getenv("BUCKET_PREFIX", False)
 mock_data     = os.getenv("MOCK_DATA_DIR", False)
 
-logger = logging.getLogger(__name__)
+logger = logging.getLogger()
 
 # Each file can have multiple JSON objects in it.
 # We split up the JSON objects and yield them
@@ -60,6 +60,7 @@ if bucket_name and bucket_prefix:
     # Here we load the object from S3
     # decode it and put it into a list
     result = [obj.get()['Body'].read().decode() for obj in objs] 
+    logging.info(f"s3 get_dir: {dir_day} cached")
     logger.debug(f"s3 get_dir: {result}")
     return result
 
@@ -96,8 +97,8 @@ if mock_data:
 
 # Loads each file. Splits the load_file request into multiple threads
 # each load_file can have a series of json_objects, so we iterate over it
-def load_files(days: int) -> typing.Generator[str, None, None]:
-  yield from get_files(days)
+# def load_files(days: int) -> typing.Generator[str, None, None]:
+#   yield from get_files(days)
   #   futures = exec.map(load_file, get_files(days))
   #   for future in futures:
   #     yield from future
@@ -107,5 +108,5 @@ def get_dataframe(days=30) -> pd.DataFrame:
   # We load all the files up to days ago, convert to a list and join with
   # newlines. This is read into a dataframe with pandas
   logger.info(f"get_dataframe: {days} days cached")
-  df = pd.read_json('\n'.join(list(load_files(days))), lines=True)
+  df = pd.read_json('\n'.join(list(get_files(days))), lines=True)
   return df

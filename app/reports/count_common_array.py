@@ -5,7 +5,7 @@ import logging
 
 from collections import Counter
 
-logger = logging.getLogger(__name__)
+logger = logging.getLogger()
 
 # @st.experimental_memo(persist="disk", ttl=600)
 def count_common_array(df: pd.DataFrame, col: str) -> pd.Series:
