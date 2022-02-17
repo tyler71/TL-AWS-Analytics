@@ -47,16 +47,21 @@ def extract_from_file(data: str) -> str:
 
 
 if bucket_name and bucket_prefix:
+  logging.info(f"S3 Mode is Active")
   def get_files(days: int) -> typing.Generator[str, None, None]:
     for dir_day in get_window_days(days, prefix=bucket_prefix):
+      logging.info(f"s3 get_files: Trying day {dir_day}")
       logger.debug(f"s3 get_files: Retrieving files from {dir_day}")
       yield from get_dir(dir_day)
   # We download all the data before returning, should be cached
   # @st.experimental_memo(persist="disk", ttl=600)
   @st.experimental_memo(persist="disk", ttl=900)
   def get_dir(dir_day) -> typing.List[str]:
+    logging.info(f"s3 get_dir: loading bucket")
     bucket = getS3Bucket()
+    logging.info(f"s3 get_dir: loading objs")
     objs = bucket.objects.filter(Prefix=dir_day)
+    logging.info(f"s3 get_dir: {objs}")
     # Here we load the object from S3
     # decode it and put it into a list
     result = [obj.get()['Body'].read().decode() for obj in objs] 
