@@ -12,6 +12,10 @@ RECENT_METRIC    = "Today"
 HISTORICAL_METRIC = "Historical"
 
 def boilerplate() -> pd.DataFrame:
+
+    if st.button('Clear Cache'):
+      st.experimental_memo.clear()
+
     metric_type = st.radio('Metric', [RECENT_METRIC, HISTORICAL_METRIC])
     if metric_type == HISTORICAL_METRIC:
         days = st.slider('How many days ago', 0, 364, value=30, step=10)

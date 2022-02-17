@@ -50,7 +50,6 @@ if bucket_name and bucket_prefix:
   logging.info(f"S3 Mode is Active")
   def get_files(days: int) -> typing.Generator[str, None, None]:
     for dir_day in get_window_days(days, prefix=bucket_prefix):
-      logging.info(f"s3 get_files: Trying day {dir_day}")
       logger.debug(f"s3 get_files: Retrieving files from {dir_day}")
       yield from get_dir(dir_day)
   # We download all the data before returning, should be cached
