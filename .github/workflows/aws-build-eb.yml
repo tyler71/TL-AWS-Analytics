@@ -60,15 +60,18 @@ jobs:
       - name: Deploy to EB
         uses: einaregilsson/beanstalk-deploy@v20
         with:
-          aws_session_token:   ${{ github.event.inputs.session_token }}
-          aws_access_key:      ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws_secret_key:      ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          application_name:    ${{ secrets.EB_APP_NAME }}
-          environment_name:    ${{ secrets.EB_ENV_NAME }}
-          version_label:       docker-app-${{ steps.v.outputs.date }}
-          region:              ${{ secrets.AWS_REGION }}
-          wait_for_deployment: false
-          deployment_package:  deploy.zip
+          aws_session_token:                 ${{ github.event.inputs.session_token }}
+          aws_access_key:                    ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws_secret_key:                    ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          application_name:                  ${{ secrets.EB_APP_NAME }}
+          environment_name:                  ${{ secrets.EB_ENV_NAME }}
+          version_label:                     tl-analytics-source-${{ github.run_number }}
+          use_existing_version_if_available: true
+          region:                            ${{ secrets.AWS_REGION }}
+          existing_bucket_name:              ${{ secrets.EB_BUCKET }}
+          wait_for_deployment:               false
+          deployment_package:                deploy.zip
+
           
 #      - name: Deploy to App Runner Image
 #        id: deploy-apprunner
