@@ -7,7 +7,8 @@ RUN apt-get update \
  && rm -r /var/lib/apt/lists/*
 
 COPY ./requirements.txt .
-RUN python -m pip install --no-deps --no-cache-dir -r requirements.txt
+#RUN python -m pip install --no-deps --no-cache-dir -r requirements.txt
+RUN python -m pip install --no-cache-dir -r requirements.txt
 
 
 # oauth is handled by oauth2-proxy. This is a Go app, so we just need to
