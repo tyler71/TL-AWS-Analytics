@@ -1,12 +1,19 @@
 import boto3
 import os
+import logging
 
 import streamlit as st
+
+logger = logging.getLogger()
 
 @st.experimental_singleton
 def getS3Bucket():
     bucket_name = os.getenv("BUCKET_NAME")
+
+    logger.debug(f"getS3Bucket: Loading s3 resource")
     s3 = boto3.resource('s3')
+    
+    logger.debug(f"getS3Bucket: Loading bucket {bucket_name}")
     bucket = s3.Bucket(bucket_name)
     return bucket
 

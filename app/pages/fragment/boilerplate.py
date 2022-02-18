@@ -1,8 +1,12 @@
+import logging
 import pandas as pd
 import streamlit as st
 
 from modules import model
 from modules.helper import minutes_to_hour_minutes
+
+
+logger = logging.getLogger()
 
 # This fragment is loaded on (all?) pages and provides
 # the global settings. Eg, recent metrics versus historical
@@ -15,6 +19,9 @@ def boilerplate() -> pd.DataFrame:
 
     if st.button('Clear Cache'):
       st.experimental_memo.clear()
+      logger.info("boilerplate, clear cache: Memo cleared")
+      st.experimental_singleton.clear()
+      logger.info("boilerplate, clear cache: Singleton cleared")
 
     metric_type = st.radio('Metric', [RECENT_METRIC, HISTORICAL_METRIC])
     if metric_type == HISTORICAL_METRIC:

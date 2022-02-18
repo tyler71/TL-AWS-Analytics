@@ -26,6 +26,7 @@ INITTIMESTAMP = "initiationtimestamp"
 # if bucket_* is set it will use S#
 # If mock_data is set, it will use mock
 # Mock overrides S3
+# Example BUCKET_PREFIX = dir/2022/01/02
 bucket_name   = os.getenv("BUCKET_NAME", False)
 bucket_prefix = os.getenv("BUCKET_PREFIX", False)
 mock_data     = os.getenv("MOCK_DATA_DIR", False)
@@ -46,32 +47,36 @@ def extract_from_file(data: str) -> str:
   yield from raw_str.split('\0')
 
 
+# Loading from S3
 if bucket_name and bucket_prefix:
-  logging.info(f"S3 Mode is Active")
+  logging.debug(f"using S3")
   def get_files(days: int) -> typing.Generator[str, None, None]:
     for dir_day in get_window_days(days, prefix=bucket_prefix):
       logger.debug(f"s3 get_files: Retrieving files from {dir_day}")
       yield from get_dir(dir_day)
-  # We download all the data before returning, should be cached
-  # @st.experimental_memo(persist="disk", ttl=600)
-  @st.experimental_memo(persist="disk", ttl=900)
+
+  # @st.experimental_memo(persist="disk", ttl=900)
   def get_dir(dir_day) -> typing.List[str]:
-    logging.info(f"s3 get_dir: loading bucket")
+    logging.debug(f"S3 get_dir: loading bucket")
     bucket = getS3Bucket()
-    logging.info(f"s3 get_dir: loading objs")
+    logging.debug(f"S3 get_dir: bucket {bucket}")
+
+    logging.debug(f"S3 get_dir: loading objs, prefix: {dir_day}")
     objs = bucket.objects.filter(Prefix=dir_day)
-    logging.info(f"s3 get_dir: {objs}")
+    logging.debug(f"S3 get_dir: loaded objs {objs}")
+
     # Here we load the object from S3
     # decode it and put it into a list
     result = [obj.get()['Body'].read().decode() for obj in objs] 
-    logging.info(f"s3 get_dir: {dir_day} cached")
-    logger.debug(f"s3 get_dir: {result}")
+    logger.debug(f"S3 get_dir: {result}")
+    logging.info(f"S3 get_dir: {dir_day} cached")
     return result
 
 
 # Mock data for developing with
 # These functions simulate a S3 bucket
 if mock_data:
+  logging.debug(f"using Mock")
   def get_files(days: int) -> typing.Generator[str, None, None]:
       for dir_day in get_window_days(days, prefix=mock_data):
           logger.debug(f"mock get_files: Retrieving files from {dir_day}")
@@ -92,6 +97,7 @@ if mock_data:
           return result
           # return result
       else:
+          logging.debug(f"mock get_dir: {dir_day} is not a directory")
           return list()
   def load_file(filename: str) -> typing.List[str]:
     with open(filename) as f:
@@ -107,7 +113,7 @@ if mock_data:
   #   for future in futures:
   #     yield from future
 
-@st.experimental_memo(persist="disk", ttl=300)
+# @st.experimental_memo(persist="disk", ttl=300)
 def get_dataframe(days=30) -> pd.DataFrame:
   # We load all the files up to days ago, convert to a list and join with
   # newlines. This is read into a dataframe with pandas
