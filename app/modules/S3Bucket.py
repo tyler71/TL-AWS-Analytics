@@ -7,14 +7,14 @@ import streamlit as st
 logger = logging.getLogger()
 
 @st.experimental_singleton
-def getS3Bucket():
-    logger.info("getS3Bucket: singleton cached")
+def get_s3_bucket():
+    logger.info("get_s3_bucket: singleton cached")
     bucket_name = os.getenv("BUCKET_NAME")
 
-    logger.debug(f"getS3Bucket: Loading s3 resource")
+    logger.debug(f"get_s3_bucket: Loading s3 resource")
     s3 = boto3.resource('s3')
     
-    logger.debug(f"getS3Bucket: Loading bucket {bucket_name}")
+    logger.debug(f"get_s3_bucket: Loading bucket {bucket_name}")
     bucket = s3.Bucket(bucket_name)
     return bucket
 

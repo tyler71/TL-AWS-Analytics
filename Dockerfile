@@ -53,9 +53,12 @@ RUN mkdir /app /data               \
 COPY ./app /app
 RUN chown -R application: /app /data
 
-COPY ./config/supervisord.conf /etc/supervisord.conf
-COPY ./config/init.sh          /init.sh
-COPY ./config/oauth.sh         /opt/oauth-proxy/
-COPY ./config/Caddyfile        /etc/Caddyfile
+COPY ./config/init/supervisord.conf   /etc/supervisord.conf
+COPY ./config/init.sh                 /init.sh
+COPY ./config/oauth/oauth.sh          /opt/oauth-proxy/
+COPY ./config/reverse_proxy/Caddyfile /etc/Caddyfile
+
+EXPOSE 8080
+EXPOSE 4443
 
 CMD bash /init.sh

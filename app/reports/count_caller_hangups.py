@@ -4,7 +4,6 @@ import duckdb
 
 @st.experimental_memo(persist="disk", ttl=600)
 def count_caller_hangups(data: pd.DataFrame) -> pd.Series:
-  df = data
   query = """
 SELECT attributes_lastflow "Last Flow", 
        COUNT(1) "Count" 
@@ -15,5 +14,5 @@ SELECT attributes_lastflow "Last Flow",
 """
   query = duckdb.query(query).to_df()
   # list(query)
-  # query = pd.Series(query)
+  query = pd.Series(query)
   return query

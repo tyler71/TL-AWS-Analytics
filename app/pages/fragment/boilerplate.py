@@ -17,6 +17,7 @@ HISTORICAL_METRIC = "Historical"
 
 def boilerplate() -> pd.DataFrame:
 
+    days, minutes = 0, 0
     col1, col2 = st.columns(2)
   
     with col1:

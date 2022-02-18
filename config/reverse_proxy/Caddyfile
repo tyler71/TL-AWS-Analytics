@@ -4,7 +4,7 @@
     https_port 4443
     on_demand_tls {
         interval 10m
-        burst    5
+        burst    3
     }
 
 }

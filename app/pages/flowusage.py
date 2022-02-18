@@ -9,7 +9,7 @@ from reports.count_caller_hangups import count_caller_hangups
 
 def app():
 
-  # Here we load the global settin widgets (sliders, and such)
+  # Here we load the global setting widgets (sliders, and such)
   # It returns the dataframe which has the data we need
   df = boilerplate()
 
