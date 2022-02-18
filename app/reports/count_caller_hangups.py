@@ -14,5 +14,5 @@ SELECT attributes_lastflow "Last Flow",
 """
   query = duckdb.query(query).to_df()
   # list(query)
-  query = pd.Series(query)
+  # query = pd.Series(query)
   return query

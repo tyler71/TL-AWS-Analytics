@@ -5,7 +5,7 @@ import streamlit as st
 import typing
 
 from modules.helper import get_window_days
-from modules.S3Bucket import getS3Bucket
+from modules.s3bucket import get_s3_bucket
 
 FLOWS         = "flowsaccessed"
 MENUS         = "menuoptionselected"
@@ -58,7 +58,7 @@ if bucket_name and bucket_prefix:
   @st.experimental_memo(persist="disk", ttl=900)
   def get_dir(dir_day) -> typing.List[str]:
     logging.debug(f"S3 get_dir: loading bucket")
-    bucket = getS3Bucket()
+    bucket = get_s3_bucket()
     logging.debug(f"S3 get_dir: bucket {bucket}")
 
     logging.debug(f"S3 get_dir: loading objs, prefix: {dir_day}")
@@ -126,8 +126,12 @@ if mock_data:
 
 @st.experimental_memo(persist="disk", ttl=300)
 def get_dataframe(days=30) -> pd.DataFrame:
+  if (bucket_name and bucket_prefix) or mock_data:
+    logger.info(f"get_dataframe: {days} days cached")
+    df = pd.read_json('\n'.join(list(get_files(days))), lines=True)
+    return df
+  else:
+    raise "BUCKET_NAME and BUCKET_PREFIX or MOCK_DATA_DIR must be provided!"
+
   # We load all the files up to days ago, convert to a list and join with
   # newlines. This is read into a dataframe with pandas
-  logger.info(f"get_dataframe: {days} days cached")
-  df = pd.read_json('\n'.join(list(get_files(days))), lines=True)
-  return df
