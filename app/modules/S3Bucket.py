@@ -8,6 +8,7 @@ logger = logging.getLogger()
 
 @st.experimental_singleton
 def getS3Bucket():
+    logger.info("getS3Bucket: singleton cached")
     bucket_name = os.getenv("BUCKET_NAME")
 
     logger.debug(f"getS3Bucket: Loading s3 resource")

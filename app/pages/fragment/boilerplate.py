@@ -17,13 +17,16 @@ HISTORICAL_METRIC = "Historical"
 
 def boilerplate() -> pd.DataFrame:
 
-    if st.button('Clear Cache'):
-      st.experimental_memo.clear()
-      logger.info("boilerplate, clear cache: Memo cleared")
-      st.experimental_singleton.clear()
-      logger.info("boilerplate, clear cache: Singleton cleared")
-
-    metric_type = st.radio('Metric', [RECENT_METRIC, HISTORICAL_METRIC])
+    col1, col2 = st.columns(2)
+  
+    with col1:
+      metric_type = st.radio('Metric', [RECENT_METRIC, HISTORICAL_METRIC])
+    with col2:
+      if st.button('Clear Cache'):
+        st.experimental_memo.clear()
+        logger.info("boilerplate, clear cache: Memo cleared")
+        st.experimental_singleton.clear()
+        logger.info("boilerplate, clear cache: Singleton cleared")
     if metric_type == HISTORICAL_METRIC:
         days = st.slider('How many days ago', 0, 364, value=30, step=10)
     elif metric_type == RECENT_METRIC:
@@ -31,6 +34,10 @@ def boilerplate() -> pd.DataFrame:
         if minutes >= 60:
             st.write(minutes_to_hour_minutes(minutes))
         days = 0
+
+
+
+
 
     if days < 100:
         loading_text = f"Loading {days} days"
