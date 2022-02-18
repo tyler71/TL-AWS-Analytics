@@ -36,7 +36,7 @@ logger = logging.getLogger()
 # Each file can have multiple JSON objects in it.
 # We split up the JSON objects and yield them
 # one at a time
-def extract_from_file(data: str) -> str:
+def extract_from_file(data: str) -> typing.Generator[str, None, None]:
   logger.debug(f"extract_from_file:\n{data}")
   if '}{' in data:
     raw_str = data.replace('}{', '}\0{')
@@ -55,7 +55,7 @@ if bucket_name and bucket_prefix:
       logger.debug(f"s3 get_files: Retrieving files from {dir_day}")
       yield from get_dir(dir_day)
 
-  # @st.experimental_memo(persist="disk", ttl=900)
+  @st.experimental_memo(persist="disk", ttl=900)
   def get_dir(dir_day) -> typing.List[str]:
     logging.debug(f"S3 get_dir: loading bucket")
     bucket = getS3Bucket()
@@ -67,10 +67,21 @@ if bucket_name and bucket_prefix:
 
     # Here we load the object from S3
     # decode it and put it into a list
-    result = [obj.get()['Body'].read().decode() for obj in objs] 
+
+    result = list()
+    for obj in objs:
+      for data in load_file(obj):
+        result.append(data)
+  
     logger.debug(f"S3 get_dir: {result}")
     logging.info(f"S3 get_dir: {dir_day} cached")
     return result
+
+  def load_file(obj: str) -> typing.List[str]:
+    logger.debug(f"load_file: {obj} cached")
+
+    data = obj.get()['Body'].read().decode()
+    return [obj for obj in extract_from_file(data)]
 
 
 # Mock data for developing with
@@ -113,7 +124,7 @@ if mock_data:
   #   for future in futures:
   #     yield from future
 
-# @st.experimental_memo(persist="disk", ttl=300)
+@st.experimental_memo(persist="disk", ttl=300)
 def get_dataframe(days=30) -> pd.DataFrame:
   # We load all the files up to days ago, convert to a list and join with
   # newlines. This is read into a dataframe with pandas
