@@ -10,6 +10,7 @@ from modules.s3bucket import get_s3_bucket
 FLOWS         = "flowsaccessed"
 MENUS         = "menuoptionselected"
 INITTIMESTAMP = "initiationtimestamp"
+INIT30MIN     = "InitTimeStamp30MinSegment"
 
 
 ## Data loading
@@ -77,6 +78,7 @@ if bucket_name and bucket_prefix:
     logging.info(f"S3 get_dir: {dir_day} cached")
     return result
 
+  @st.experimental_memo(persist="disk", ttl=2_628_000)
   def load_file(obj: str) -> typing.List[str]:
     logger.debug(f"load_file: {obj} cached")
 
@@ -131,7 +133,7 @@ def get_dataframe(days=30) -> pd.DataFrame:
     df = pd.read_json('\n'.join(list(get_files(days))), lines=True)
     return df
   else:
-    raise "BUCKET_NAME and BUCKET_PREFIX or MOCK_DATA_DIR must be provided!"
+    raise Exception("BUCKET_NAME and BUCKET_PREFIX or MOCK_DATA_DIR must be provided!")
 
   # We load all the files up to days ago, convert to a list and join with
   # newlines. This is read into a dataframe with pandas

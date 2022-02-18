@@ -2,6 +2,7 @@ import streamlit as st
 
 from reports.count_common_array import count_common_array
 from reports.count_caller_hangups import count_caller_hangups
+from reports.count_calls import count_calls
 from pages.fragment.boilerplate import boilerplate, add_widget
 
 # Here we define the expected JSON structure
@@ -13,6 +14,10 @@ MENUS="menuoptionselected"
 def app():
 
   df = boilerplate()
+
+  st.header("Count Callers")
+  add_widget(count_calls(df),
+             st.line_chart)
 
   st.header("Most Common Flows")
   add_widget(count_common_array(df, FLOWS), 

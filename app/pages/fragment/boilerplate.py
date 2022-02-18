@@ -29,11 +29,11 @@ def boilerplate() -> pd.DataFrame:
         st.experimental_singleton.clear()
         logger.info("boilerplate, clear cache: Singleton cleared")
     if metric_type == HISTORICAL_METRIC:
-        days = st.slider('How many days ago', 0, 364, value=30, step=10)
+        days = st.slider('How many days ago', 0, 730, value=30, step=10)
     elif metric_type == RECENT_METRIC:
-        minutes = st.slider("How many minutes ago", 0, 480, value=15, step=15)
-        if minutes >= 60:
-            st.write(minutes_to_hour_minutes(minutes))
+        # minutes = st.slider("How many minutes ago", 0, 480, value=15, step=15)
+        # if minutes >= 60:
+        #     st.write(minutes_to_hour_minutes(minutes))
         days = 0
 
 
@@ -50,9 +50,7 @@ def boilerplate() -> pd.DataFrame:
         st.error("No data available!")
         st.stop()
 
-    if metric_type == "Recent":
-        df[model.INITTIMESTAMP] = pd.to_datetime(df[model.INITTIMESTAMP])
-        df = df[df[model.INITTIMESTAMP].diff().lt(f'{minutes}Min')]
+    # df[model.INITTIMESTAMP] = pd.to_datetime(df[model.INITTIMESTAMP])
 
     return df
 
