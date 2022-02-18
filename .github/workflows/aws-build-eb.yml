@@ -51,6 +51,9 @@ jobs:
 
       # Configure deployment package to use AWS repo with image of today's date.
       - name: Generate deployment package
+        env:
+          ECR_REGISTRY:   ${{ steps.login-ecr.outputs.registry }}
+          ECR_REPOSITORY: ${{ steps.v.outputs.reponame }}
         run: |
           cd beanstalk
           sed -i "s;image:.*;image:${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:${{ steps.v.outputs.date }};" docker-compose.yml
