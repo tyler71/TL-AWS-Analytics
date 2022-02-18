@@ -1,4 +1,4 @@
-name: Build image and push to AWS Elastic Beanstalk
+name: Build / Push AWS ECR; Deploy to AWS Beanstalk
 
 on:
   push:
