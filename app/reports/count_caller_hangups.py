@@ -3,7 +3,7 @@ import streamlit as st
 import duckdb
 
 @st.experimental_memo(persist="disk", ttl=600)
-def count_caller_hangups(data: pd.DataFrame) -> pd.Series:
+def count_caller_hangups(df: pd.DataFrame) -> pd.Series:
   query = """
 SELECT attributes_lastflow "Last Flow", 
        COUNT(1) "Count" 
