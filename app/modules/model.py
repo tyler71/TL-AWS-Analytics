@@ -5,7 +5,7 @@ import streamlit as st
 import typing
 
 from modules.helper import get_window_days
-from modules.s3bucket import get_s3_bucket
+from modules.s3bucket import get_s3_bucket, get_s3_resource
 
 FLOWS         = "flowsaccessed"
 MENUS         = "menuoptionselected"
@@ -68,20 +68,23 @@ if bucket_name and bucket_prefix:
 
     # Here we load the object from S3
     # decode it and put it into a list
+    discovered_files = [(f.bucket_name, f.key) 
+        for f in bucket.objects.filter(Prefix=dir_day).all()]
 
     result = list()
-    for obj in objs:
-      for data in load_file(obj):
+    for file_obj in discovered_files:
+      for data in load_file(file_obj[0], file_obj[1]):
         result.append(data)
-  
+
     logger.debug(f"S3 get_dir: {result}")
     logging.info(f"S3 get_dir: {dir_day} cached")
     return result
 
   @st.experimental_memo(persist="disk", ttl=2_628_000)
-  def load_file(obj: str) -> typing.List[str]:
-    logger.debug(f"load_file: {obj} cached")
-
+  def load_file(bucket: str, key: str) -> typing.List[str]:
+    logger.debug(f"load_file: {bucket + key} cached")
+    s3 = get_s3_resource()
+    obj = s3.Object(bucket, key)
     data = obj.get()['Body'].read().decode()
     return [obj for obj in extract_from_file(data)]
 
