@@ -4,6 +4,7 @@ from reports.count_common_array import count_common_array
 from reports.count_caller_hangups import count_caller_hangups
 from reports.count_calls import count_calls
 from pages.fragment.boilerplate import boilerplate, add_widget
+from charts.bar_chart import bar_chart
 
 # Here we define the expected JSON structure
 FLOWS="flowsaccessed"
@@ -16,8 +17,7 @@ def app():
   df = boilerplate()
 
   st.header("Count Callers")
-  add_widget(count_calls(df),
-             st.line_chart)
+  bar_chart(count_calls(df), "Date", "Count")
 
   st.header("Most Common Flows")
   add_widget(count_common_array(df, FLOWS), 

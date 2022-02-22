@@ -14,20 +14,20 @@ INIT30MIN     = "InitTimeStamp30MinSegment"
 
 
 ## Data loading
-# The outcome here is to load a dataframe
-# To get this, we call load_files, which calls get_files
-# get_files operates by directory and calls get_dir
-# get_dir returns the strings of all objects found
-# by calling extract_from_file. More than one object may
-# be in a file
+# The outcome here is to load a dataframe of last n days
+# To get this, we call get_days
+# get_days operates by directory ("dir1/2022/01/02") and calls get_dir
+# get_dir parses a directory and calls extract_from_file
+# on each file found
+# More than one JSON object may be in a file.
 # It is broken up to allow caching at different levels
 # Generators cannot be cached.
 
 ## Here we either use the S3 implementation or mock
-# if bucket_* is set it will use S#
+# if bucket_* is set it will use S3
 # If mock_data is set, it will use mock
 # Mock overrides S3
-# Example BUCKET_PREFIX = dir/2022/01/02
+# Example BUCKET_PREFIX = dir/converted_files/
 bucket_name   = os.getenv("BUCKET_NAME", False)
 bucket_prefix = os.getenv("BUCKET_PREFIX", False)
 mock_data     = os.getenv("MOCK_DATA_DIR", False)
@@ -51,9 +51,9 @@ def extract_from_file(data: str) -> typing.Generator[str, None, None]:
 # Loading from S3
 if bucket_name and bucket_prefix:
   logging.debug(f"using S3")
-  def get_files(days: int) -> typing.Generator[str, None, None]:
+  def get_days(days: int) -> typing.Generator[str, None, None]:
     for dir_day in get_window_days(days, prefix=bucket_prefix):
-      logger.debug(f"s3 get_files: Retrieving files from {dir_day}")
+      logger.debug(f"s3 get_days: Retrieving files from {dir_day}")
       yield from get_dir(dir_day)
 
   @st.experimental_memo(persist="disk", ttl=900)
@@ -90,9 +90,9 @@ if bucket_name and bucket_prefix:
 # These functions simulate a S3 bucket
 if mock_data:
   logging.debug(f"using Mock")
-  def get_files(days: int) -> typing.Generator[str, None, None]:
+  def get_days(days: int) -> typing.Generator[str, None, None]:
       for dir_day in get_window_days(days, prefix=mock_data):
-          logger.debug(f"mock get_files: Retrieving files from {dir_day}")
+          logger.debug(f"mock get_days: Retrieving files from {dir_day}")
           yield from get_dir(dir_day)
   @st.experimental_memo(persist="disk", ttl=900)
   def get_dir(dir_day) -> typing.List[str]:
@@ -121,8 +121,8 @@ if mock_data:
 # Loads each file. Splits the load_file request into multiple threads
 # each load_file can have a series of json_objects, so we iterate over it
 # def load_files(days: int) -> typing.Generator[str, None, None]:
-#   yield from get_files(days)
-  #   futures = exec.map(load_file, get_files(days))
+#   yield from get_days(days)
+  #   futures = exec.map(load_file, get_days(days))
   #   for future in futures:
   #     yield from future
 
@@ -130,7 +130,7 @@ if mock_data:
 def get_dataframe(days=30) -> pd.DataFrame:
   if (bucket_name and bucket_prefix) or mock_data:
     logger.info(f"get_dataframe: {days} days cached")
-    df = pd.read_json('\n'.join(list(get_files(days))), lines=True)
+    df = pd.read_json('\n'.join(list(get_days(days))), lines=True)
     return df
   else:
     raise Exception("BUCKET_NAME and BUCKET_PREFIX or MOCK_DATA_DIR must be provided!")

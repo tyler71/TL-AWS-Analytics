@@ -7,11 +7,15 @@ from pages.fragment.boilerplate import boilerplate, add_widget
 from reports.count_common_array import count_common_array
 from reports.count_caller_hangups import count_caller_hangups
 
+import pandas as pd
+import altair as alt
+
 def app():
 
   # Here we load the global setting widgets (sliders, and such)
   # It returns the dataframe which has the data we need
   df = boilerplate()
+
 
   # Partials are a good way to pass a _partially_ filled function into
   # another function. Here, we preset the height and width to 600
