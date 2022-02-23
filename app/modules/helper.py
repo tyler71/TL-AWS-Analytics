@@ -50,7 +50,7 @@ def filter_today(df: pd.DataFrame) -> pd.DataFrame:
 
     df['temp_date'] = pd.to_datetime(df[ts], format='%Y/%m/%d')
     df['temp_date'] = df['temp_date'].dt.tz_convert(tz)
-    df = df.loc[(df['temp_date'] == today)]
+    df = df.loc[(df['temp_date'] >= today)]
   
     df = df.drop('temp_date', axis=1)
   
