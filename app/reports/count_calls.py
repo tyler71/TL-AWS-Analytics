@@ -12,11 +12,15 @@ def count_calls(df: pd.DataFrame) -> pd.Series:
   df[ts] = pd.to_datetime(df[ts])
   df[ts] = df[ts].dt.tz_convert(tz)
 
-  groupby = st.radio("Group by", ["Day", "Hour", "Half Hour"])
+  groupby = st.radio("Group by", [
+    "Half Hour",
+    "Hour", 
+    "Day", 
+  ])
   groupby_choice = {
-    "Day"      : group_by_day,
-    "Hour"     : group_by_hour,
     "Half Hour": group_by_halfhr,
+    "Hour"     : group_by_hour,
+    "Day"      : group_by_day,
   }
   query = groupby_choice[groupby](df)
 
