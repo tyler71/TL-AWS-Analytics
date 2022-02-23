@@ -32,7 +32,7 @@ def main():
 def config():
   st.set_page_config(
     page_title            = "TL Analytics",
-    initial_sidebar_state = "collapsed",
+    # initial_sidebar_state = "collapsed",
   )
 
 if __name__ == '__main__':
