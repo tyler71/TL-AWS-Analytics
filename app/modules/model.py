@@ -4,7 +4,7 @@ import pandas as pd
 import streamlit as st
 import typing
 
-from modules.helper import get_window_days
+from modules.helper import get_window_days, filter_today
 from modules.s3bucket import get_s3_bucket, get_s3_resource
 
 FLOWS         = "flowsaccessed"
@@ -134,6 +134,9 @@ def get_dataframe(days=30) -> pd.DataFrame:
   if (bucket_name and bucket_prefix) or mock_data:
     logger.info(f"get_dataframe: {days} days cached")
     df = pd.read_json('\n'.join(list(get_days(days))), lines=True)
+
+    if not df.empty and days == 0:
+        df = filter_today(df)
     return df
   else:
     raise Exception("BUCKET_NAME and BUCKET_PREFIX or MOCK_DATA_DIR must be provided!")
