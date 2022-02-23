@@ -4,7 +4,6 @@ import duckdb
 import os
 from modules import model
 
-# @st.experimental_memo(persist="disk", ttl=600)
 def count_calls(df: pd.DataFrame) -> pd.Series:
   tz = os.getenv("TIMEZONE", "US/Pacific")
   ts = model.INITTIMESTAMP

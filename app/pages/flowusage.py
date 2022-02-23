@@ -22,7 +22,7 @@ def app():
   # This is similar to st.dataframe(df, height=600, width=600)
   # Since we use add_widget, which has logic for checking the widget
   # This makes everything play nice
-  partial_dataframe_widget = partial(st.dataframe, height=600, width=600)
+  partial_dataframe_widget = partial(st.dataframe, height=600, width=1000)
 
   st.header("Most Common Flows")
   add_widget(count_common_array(df, model.FLOWS), partial_dataframe_widget)
