@@ -42,5 +42,5 @@ if __name__ == '__main__':
   logger = logging.getLogger()
   logger.setLevel(level)
   
-  logger.info(logging.getLevelName(logger.getEffectiveLevel()))
+  # logger.info(logging.getLevelName(logger.getEffectiveLevel()))
   main()

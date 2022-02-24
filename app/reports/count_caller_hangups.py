@@ -57,6 +57,7 @@ SELECT {0} "Last Flow",
  # WHERE DisconnectReason='CUSTOMER_DISCONNECT'
  #   AND Agent_Username='null'
   query = duckdb.query(query).to_df()
+  print(query)
   query = query.pivot_table(
     index="Last Flow", 
     columns='date_str', 
