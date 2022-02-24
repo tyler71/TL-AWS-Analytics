@@ -29,6 +29,5 @@ def app():
 
   st.header("Caller Hangups by Flow")
   hangups = count_caller_hangups(df)
-  hangups = hangups.set_index("Last Flow")
   add_widget(hangups,
              st.dataframe)
