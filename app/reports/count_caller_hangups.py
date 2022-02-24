@@ -60,7 +60,7 @@ SELECT {0} "Last Flow",
   query = query.pivot_table(
     index="Last Flow", 
     columns='date_str', 
-    values='Count',
+    values='count',
     fill_value=0,
   )
   return query
@@ -82,7 +82,7 @@ SELECT {0} "Last Flow",
   query = query.pivot_table(
     index="Last Flow", 
     columns='date_str', 
-    values='Count',
+    values='count',
     fill_value=0,
   )
   return query
