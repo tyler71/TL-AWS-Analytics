@@ -1,6 +1,6 @@
 # This stage installs all the requirements for the main app.
 # This will be copied later to the production stage
-FROM python:3.10-slim AS build_app
+FROM python:3.8-slim AS build_app
 
 RUN apt-get update \
  && apt-get -y install g++ \
@@ -13,7 +13,7 @@ RUN python -m pip install --no-cache-dir -r requirements.txt
 
 # oauth is handled by oauth2-proxy. This is a Go app, so we just need to
 # download the app and put it in a predictible place for the production stage
-FROM python:3.10-slim AS build_oauth
+FROM python:3.8-slim AS build_oauth
 ENV OAUTH_DOWNLOAD="https://github.com/oauth2-proxy/oauth2-proxy/releases/download/v7.2.1/oauth2-proxy-v7.2.1.linux-amd64.tar.gz"
 
 RUN apt-get update \
@@ -44,7 +44,7 @@ RUN mkdir -p /opt/reverse_proxy  \
 # We also copy in config files
 # A application user is created. While the image doesn't force non-root
 # Supervisor later on drops root for all apps it handles
-FROM python:3.10-slim AS production
+FROM python:3.8-slim AS production
 
 ENV DATA_DIR /data
 
