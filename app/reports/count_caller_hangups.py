@@ -44,11 +44,11 @@ def count_caller_hangups(df: pd.DataFrame) -> pd.Series:
 def group_by_month(df, col: str):
   ts = model.INITTIMESTAMP
   df['date_str'] = df[ts].dt.strftime('%b %Y')
-  # df = df.explode(col)
+  print(df)
   query = """
 SELECT {0} "Last Flow", 
        date_str, 
-       COUNT(1) Count
+       COUNT(1) count
  FROM df  
  WHERE disconnectreason='CUSTOMER_DISCONNECT'
  GROUP BY {0}, date_str
@@ -57,7 +57,6 @@ SELECT {0} "Last Flow",
  # WHERE DisconnectReason='CUSTOMER_DISCONNECT'
  #   AND Agent_Username='null'
   query = duckdb.query(query).to_df()
-  print(query)
   query = query.pivot_table(
     index="Last Flow", 
     columns='date_str', 
@@ -72,7 +71,7 @@ def group_by_year(df, col: str):
   query = """
 SELECT {0} "Last Flow", 
        date_str, 
-       COUNT(1) Count
+       COUNT(1) count
  FROM df  
  WHERE DisconnectReason='CUSTOMER_DISCONNECT'
    AND Agent_Username is null
