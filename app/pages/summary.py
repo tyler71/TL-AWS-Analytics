@@ -19,14 +19,6 @@ def app():
   st.header("Count Callers")
   bar_chart(count_calls(df), "Date", "Count")
 
-  # st.header("Most Common Flows")
-  # add_widget(count_common_array(df, FLOWS), 
-  #            st.bar_chart)
-
-  # st.header("Most Common Menu Options")
-  # add_widget(count_common_array(df, MENUS),
-  #            st.bar_chart)
-
   st.header("Caller Hangups by Flow")
   hangups = count_caller_hangups(df)
   add_widget(hangups,

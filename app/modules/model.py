@@ -137,6 +137,10 @@ def get_dataframe(days=30, start_date=None) -> pd.DataFrame:
     df = pd.read_json('\n'.join(retrieved_days), lines=True)
 
     if not df.empty and days == 0:
+        # UTC can return some results prior to the localized
+        # time of today. When the filter is just for today,
+        # we use a little extra logic to ensure it's just
+        # todays results returned
         df = filter_today(df, start_date)
     return df
   else:

@@ -10,18 +10,32 @@ def count_calls(df: pd.DataFrame) -> pd.Series:
   
   df[ts] = pd.to_datetime(df[ts])
   df[ts] = df[ts].dt.tz_convert(tz)
+  
+  download_button_id = st.session_state['widget_id'].__next__()
 
-  groupby = st.radio("Group by", [
-    "Half Hour",
-    "Hour", 
-    "Day", 
-  ])
-  groupby_choice = {
-    "Half Hour": group_by_halfhr,
-    "Hour"     : group_by_hour,
-    "Day"      : group_by_day,
-  }
+  col1, col2 = st.columns(2)
+
+  with col1:
+    groupby = st.radio("Group by", [
+      "Half Hour",
+      "Hour", 
+      "Day", 
+    ])
+    groupby_choice = {
+      "Half Hour": group_by_halfhr,
+      "Hour"     : group_by_hour,
+      "Day"      : group_by_day,
+    }
   query = groupby_choice[groupby](df)
+  
+  if not query.empty:
+    with col2:
+        st.download_button(
+             label= "Download CSV",
+             data = query.to_csv(),
+             mime = 'text/csv',
+             key  = download_button_id,
+        )
 
   return query
 

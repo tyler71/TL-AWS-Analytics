@@ -28,11 +28,15 @@ def boilerplate() -> pd.DataFrame:
         logger.info("boilerplate, clear cache: Memo cleared")
         st.experimental_singleton.clear()
         logger.info("boilerplate, clear cache: Singleton cleared")
+      historical = st.checkbox('Historical')
 
     # Ensure slider doesn't get farther then 2 years ago
-    t = date.today()
-    days_left = (date_pick - (t - timedelta(days=730))).days + 10
-    days = st.slider(f'Days from {date_pick}', 0, days_left, value=0, step=10)
+    if historical:
+      t = date.today()
+      days_left = (date_pick - (t - timedelta(days=730))).days + 10
+      days = st.slider(f'Days from {date_pick}', 0, days_left, value=0, step=10)
+    else:
+      days = st.slider(f'Days from {date_pick}', 0, 30, value=0, step=1)
 
     if days < 100:
         loading_text = f"Loading {days} days"
