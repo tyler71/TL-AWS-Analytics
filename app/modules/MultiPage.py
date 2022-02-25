@@ -28,7 +28,9 @@ class MultiPage:
 
     def run(self):
         # Dropdown to select the page to run
-        
+
+        st.sidebar.header("TechLine Analytics")
+
         page = st.sidebar.radio(
             'Go to', 
             self.pages, 
