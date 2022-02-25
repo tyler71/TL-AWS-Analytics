@@ -56,7 +56,7 @@ if bucket_name and bucket_prefix:
       logger.debug(f"s3 get_days: Retrieving files from {dir_day}")
       yield from get_dir(dir_day)
 
-  @st.experimental_memo(persist="disk", ttl=900)
+  # @st.experimental_memo(persist="disk", ttl=900)
   def get_dir(dir_day) -> typing.List[str]:
     logging.debug(f"S3 get_dir: loading bucket")
     bucket = get_s3_bucket()
@@ -97,7 +97,7 @@ if mock_data:
       for dir_day in get_window_days(days, prefix=mock_data, start_date=start_date):
           logger.debug(f"mock get_days: Retrieving files from {dir_day}")
           yield from get_dir(dir_day)
-  @st.experimental_memo(persist="disk", ttl=900)
+  # @st.experimental_memo(persist="disk", ttl=900)
   def get_dir(dir_day) -> typing.List[str]:
       if os.path.isdir(dir_day):
           filepaths = (os.path.join(dir_day, f) for f in os.listdir(dir_day))
@@ -129,7 +129,7 @@ if mock_data:
   #   for future in futures:
   #     yield from future
 
-@st.experimental_memo(persist="disk", ttl=300)
+# @st.experimental_memo(persist="disk", ttl=300)
 def get_dataframe(days=30, start_date=None) -> pd.DataFrame:
   if (bucket_name and bucket_prefix) or mock_data:
     retrieved_days = list(get_days(days, start_date))
