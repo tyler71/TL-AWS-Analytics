@@ -51,8 +51,8 @@ def extract_from_file(data: str) -> typing.Generator[str, None, None]:
 # Loading from S3
 if bucket_name and bucket_prefix:
   logging.debug(f"using S3")
-  def get_days(days: int) -> typing.Generator[str, None, None]:
-    for dir_day in get_window_days(days, prefix=bucket_prefix):
+  def get_days(days: int, start_date) -> typing.Generator[str, None, None]:
+    for dir_day in get_window_days(days, prefix=bucket_prefix, start_date=start_date):
       logger.debug(f"s3 get_days: Retrieving files from {dir_day}")
       yield from get_dir(dir_day)
 
@@ -93,8 +93,8 @@ if bucket_name and bucket_prefix:
 # These functions simulate a S3 bucket
 if mock_data:
   logging.debug(f"using Mock")
-  def get_days(days: int) -> typing.Generator[str, None, None]:
-      for dir_day in get_window_days(days, prefix=mock_data):
+  def get_days(days: int, start_date) -> typing.Generator[str, None, None]:
+      for dir_day in get_window_days(days, prefix=mock_data, start_date=start_date):
           logger.debug(f"mock get_days: Retrieving files from {dir_day}")
           yield from get_dir(dir_day)
   @st.experimental_memo(persist="disk", ttl=900)
@@ -130,13 +130,14 @@ if mock_data:
   #     yield from future
 
 @st.experimental_memo(persist="disk", ttl=300)
-def get_dataframe(days=30) -> pd.DataFrame:
+def get_dataframe(days=30, start_date=None) -> pd.DataFrame:
   if (bucket_name and bucket_prefix) or mock_data:
-    logger.info(f"get_dataframe: {days} days cached")
-    df = pd.read_json('\n'.join(list(get_days(days))), lines=True)
+    retrieved_days = list(get_days(days, start_date))
+    logger.info(f"get_dataframe: {days} days from {start_date} cached with {len(retrieved_days)} records")
+    df = pd.read_json('\n'.join(retrieved_days), lines=True)
 
     if not df.empty and days == 0:
-        df = filter_today(df)
+        df = filter_today(df, start_date)
     return df
   else:
     raise Exception("BUCKET_NAME and BUCKET_PREFIX or MOCK_DATA_DIR must be provided!")

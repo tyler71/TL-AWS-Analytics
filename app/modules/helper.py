@@ -8,9 +8,12 @@ from modules import model
 
 from datetime import datetime, timedelta
 
-def get_window_days(days: int, prefix='', suffix='') -> typing.Generator[str, None, None]:
+def get_window_days(days: int, prefix='', suffix='', start_date=None) -> typing.Generator[str, None, None]:
     tz = pytz.timezone(os.getenv('TIMEZONE', 'America/Los_Angeles'))
-    today = datetime.now(tz)
+    if start_date is not None:
+      today = start_date
+    else:
+      today = datetime.now(tz)
     one_day = timedelta(days=1)
 
     if days == 0:
@@ -42,10 +45,13 @@ def minutes_to_hour_minutes(minutes: int) -> str:
     return msg
 
 # Specifically only get todays rows
-def filter_today(df: pd.DataFrame) -> pd.DataFrame:
+def filter_today(df: pd.DataFrame, start_date=None) -> pd.DataFrame:
     tz = pytz.timezone(os.getenv('TIMEZONE', 'America/Los_Angeles'))
     ts = model.INITTIMESTAMP
-    today = datetime.now(tz)
+    if start_date is not None:
+      today = start_date
+    else:
+      today = datetime.now(tz)
     today = today.strftime('%Y/%m/%d')
 
     df['temp_date'] = pd.to_datetime(df[ts], format='%Y/%m/%d')

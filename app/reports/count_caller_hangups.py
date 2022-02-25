@@ -2,7 +2,9 @@ import duckdb
 import os
 import pandas as pd
 import streamlit as st
+from functools import partial
 from modules import model
+
 
 def count_caller_hangups(df: pd.DataFrame) -> pd.Series:
     col = 'attributes_lastflow'
@@ -25,8 +27,8 @@ def count_caller_hangups(df: pd.DataFrame) -> pd.Series:
         ],
         key=radio_id)
       groupby_choice = {
-        "Month"     : group_by_month,
-        "Annual"    : group_by_year,
+        "Month"     : partial(group_by, date_str='%b %Y'),
+        "Annual"    : partial(group_by, date_str="%Y"),
       }
       query = groupby_choice[groupby](df, col)
   
@@ -41,39 +43,15 @@ def count_caller_hangups(df: pd.DataFrame) -> pd.Series:
   
     return query
 
-def group_by_month(df, col: str):
+def group_by(df, col: str, date_str: str):
   ts = model.INITTIMESTAMP
-  df['date_str'] = df[ts].dt.strftime('%b %Y')
-  print(df)
+  df['date_str'] = df[ts].dt.strftime(date_str)
   query = """
 SELECT {0} "Last Flow", 
        date_str, 
        COUNT(1) count
  FROM df  
  WHERE disconnectreason='CUSTOMER_DISCONNECT'
- GROUP BY {0}, date_str
- ORDER BY {0} ASC, date_str ASC, count DESC
-""".format(col)
- # WHERE DisconnectReason='CUSTOMER_DISCONNECT'
- #   AND Agent_Username='null'
-  query = duckdb.query(query).to_df()
-  query = query.pivot_table(
-    index="Last Flow", 
-    columns='date_str', 
-    values='count',
-    fill_value=0,
-  )
-  return query
-  
-def group_by_year(df, col: str):
-  ts = model.INITTIMESTAMP
-  df['date_str'] = df[ts].dt.strftime('%Y')
-  query = """
-SELECT {0} "Last Flow", 
-       date_str, 
-       COUNT(1) count
- FROM df  
- WHERE DisconnectReason='CUSTOMER_DISCONNECT'
    AND Agent_Username is null
  GROUP BY {0}, date_str
  ORDER BY {0} ASC, date_str ASC, count DESC
