@@ -46,6 +46,9 @@ RUN mkdir -p /opt/reverse_proxy  \
 # Supervisor later on drops root for all apps it handles
 FROM python:3.8-slim AS production
 
+ARG SET_GIT_SHA=dev
+ENV GIT_SHA=$SET_GIT_SHA
+
 ENV DATA_DIR /data
 
 COPY --from=build_app           /usr/local         /usr/local
