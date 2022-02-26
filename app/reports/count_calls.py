@@ -1,4 +1,5 @@
 import os
+from functools import partial
 
 import duckdb
 import pandas as pd
@@ -24,9 +25,9 @@ def count_calls(df: pd.DataFrame) -> pd.Series:
             "Day",
         ])
         groupby_choice = {
-            "Half Hour": group_by_halfhr,
-            "Hour": group_by_hour,
-            "Day": group_by_day,
+            "Half Hour": partial(group_by, stfr_str='%-I:%M%p', interval='30T'),
+            "Hour": partial(group_by, stfr_str='%-I%p'),
+            "Day": partial(group_by, stfr_str='%B %d, %Y'),
         }
     query = groupby_choice[groupby](df)
 
@@ -42,45 +43,17 @@ def count_calls(df: pd.DataFrame) -> pd.Series:
     return query
 
 
-def group_by_hour(df: pd.DataFrame) -> pd.Series:
+def group_by(df: pd.DataFrame, stfr_str, interval=None) -> pd.Series:
     ts = model.INITTIMESTAMP
-    df[model.DATE_STR] = df[ts].dt.strftime('%-I%p')
+    if interval is not None:  # group into specified intervals
+        df[ts] = df[ts].dt.floor(interval)
+    df[model.DATE_STR] = df[ts].dt.strftime(stfr_str)
     query = """
 SELECT {date_str} "Date", COUNT(1) "Count"
  FROM df
  GROUP BY {date_str}
- ORDER BY strptime({date_str},'%-I%p')
-""".format(date_str=model.DATE_STR)
-    query = duckdb.query(query).to_df()
-
-    return query
-
-
-def group_by_day(df: pd.DataFrame) -> pd.Series:
-    ts = model.INITTIMESTAMP
-    df[model.DATE_STR] = df[ts].dt.strftime('%B %d, %Y')
-    query = """
-SELECT date_str "Date", COUNT(1) "Count"
- FROM df
- GROUP BY date_str
- ORDER BY strptime(date_str, '%B %d, %Y')
-"""
-    query = duckdb.query(query).to_df()
-
-    return query
-
-
-def group_by_halfhr(df: pd.DataFrame) -> pd.Series:
-    ts = model.INITTIMESTAMP
-    # Group into 30 minute intervals
-    df[ts] = df[ts].dt.floor('30T')
-    df['date_str'] = df[ts].dt.strftime('%-I:%M%p')
-    query = """
-SELECT date_str "Date", COUNT(1) "Count"
- FROM df
- GROUP BY date_str
- ORDER BY strptime(date_str, '%-I:%M%p')
-"""
+ ORDER BY strptime({date_str},'{stfr_str}')
+""".format(date_str=model.DATE_STR, stfr_str=stfr_str)
     query = duckdb.query(query).to_df()
 
     return query

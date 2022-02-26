@@ -2,7 +2,7 @@ import itertools
 
 import streamlit as st
 
-from app.modules.helper import sha
+from modules.helper import sha
 
 
 class MultiPage:
