@@ -1,8 +1,10 @@
 import logging
 import os
 import typing
+from datetime import datetime
 
 import pandas as pd
+import pytz
 import streamlit as st
 from modules.helper import get_window_days
 from modules.s3bucket import get_s3_bucket, get_s3_resource
@@ -130,6 +132,25 @@ if mock_data:
             data = f.read()
             logger.debug(f"load_file: {filename} cached")
             return [obj for obj in extract_from_file(data)]
+
+# Specifically only get todays rows
+def filter_today(df: pd.DataFrame, start_date=None) -> pd.DataFrame:
+    tz = pytz.timezone(os.getenv('TZ', 'America/Los_Angeles'))
+    ts = INITTIMESTAMP
+    if start_date is not None:
+        today = start_date
+    else:
+        today = datetime.now(tz)
+    today = today.strftime('%Y/%m/%d')
+
+    df['temp_date'] = pd.to_datetime(df[ts], format='%Y/%m/%d')
+    df['temp_date'] = df['temp_date'].dt.tz_convert(tz)
+    df = df.loc[(df['temp_date'] >= today)]
+
+    df = df.drop('temp_date', axis=1)
+
+    return df
+
 
 
 # Loads each file. Splits the load_file request into multiple threads

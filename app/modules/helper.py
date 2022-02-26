@@ -3,9 +3,7 @@ import os
 import typing
 from datetime import datetime, timedelta
 
-import pandas as pd
 import pytz
-from modules import model
 
 
 def get_window_days(days: int, prefix='', suffix='', start_date=None) -> typing.Generator[str, None, None]:
@@ -45,21 +43,8 @@ def minutes_to_hour_minutes(minutes: int) -> str:
     return msg
 
 
-# Specifically only get todays rows
-def filter_today(df: pd.DataFrame, start_date=None) -> pd.DataFrame:
-    tz = pytz.timezone(os.getenv('TZ', 'America/Los_Angeles'))
-    ts = model.INITTIMESTAMP
-    if start_date is not None:
-        today = start_date
-    else:
-        today = datetime.now(tz)
-    today = today.strftime('%Y/%m/%d')
-
-    df['temp_date'] = pd.to_datetime(df[ts], format='%Y/%m/%d')
-    df['temp_date'] = df['temp_date'].dt.tz_convert(tz)
-    df = df.loc[(df['temp_date'] >= today)]
-
-    df = df.drop('temp_date', axis=1)
-
-    return df
-
+def sha():
+    sha = os.getenv("GIT_SHA", "dev")
+    git_url = os.getenv("GIT_COMMIT_URL", "https://github.com/tyler71/TL-AWS-Analytics/commit")
+    sha_msg = f"*[{sha[:6]}]({git_url}/{sha})*"
+    return sha_msg
