@@ -21,8 +21,6 @@ def get_window_days(days: int, prefix='', suffix='', start_date=None) -> typing.
     else:
       for i in range(days + 1):
         calc_date = today - one_day * i
-        print(f"get_window_days: {today} - {one_day} * {i}")
-        print(f"get_window_days: calc_date {calc_date}")
         yield ''.join((prefix, calc_date.strftime('%Y/%m/%d'), suffix))
 
 
