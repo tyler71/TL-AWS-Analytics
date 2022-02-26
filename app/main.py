@@ -1,10 +1,12 @@
 import logging
 import os
+import time
+
+import streamlit as st
 
 from modules import MultiPage
-from pages import summary, flowusage
-import streamlit as st
-import time
+from pages import summary, usage
+
 
 ####
 # TL AWS Analytics with Streamlit
@@ -16,35 +18,36 @@ import time
 
 
 def main():
+    app = MultiPage.MultiPage()
+    config()
 
-  app = MultiPage.MultiPage()
-  config()
+    # Set app to timezone set in TZ
+    time.tzset()
 
-  # Set app to timezone set in TZ
-  time.tzset()
+    pages = [
+        ("Summary", summary.app),
+        ("Contact Flow Usage", usage.app),
+    ]
 
-  pages = [
-    ("Summary", summary.app),
-    ("Flow and Menu Usage", flowusage.app),
-  ]
+    for page in pages:
+        app.add_page(page[0], page[1])
 
-  for page in pages:
-    app.add_page(page[0], page[1])
+    app.run()
 
-  app.run()
 
 def config():
-  st.set_page_config(
-    page_title            = "TL Analytics",
-    # initial_sidebar_state = "collapsed",
-  )
+    st.set_page_config(
+        page_title="TL Analytics",
+        # initial_sidebar_state = "collapsed",
+    )
+
 
 if __name__ == '__main__':
-  loglevel = os.environ.get('LOGLEVEL', 'WARNING').upper()
-  level = logging.getLevelName(loglevel)
-  
-  logger = logging.getLogger()
-  logger.setLevel(level)
-  
-  # logger.info(logging.getLevelName(logger.getEffectiveLevel()))
-  main()
+    loglevel = os.environ.get('LOGLEVEL', 'WARNING').upper()
+    level = logging.getLevelName(loglevel)
+
+    logger = logging.getLogger()
+    logger.setLevel(level)
+
+    # logger.info(logging.getLevelName(logger.getEffectiveLevel()))
+    main()

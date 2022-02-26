@@ -1,81 +1,86 @@
+import os
+
+import duckdb
 import pandas as pd
 import streamlit as st
-import duckdb
-import os
 from modules import model
 
+
 def count_calls(df: pd.DataFrame) -> pd.Series:
-  tz = os.getenv("TIMEZONE", "US/Pacific")
-  ts = model.INITTIMESTAMP
-  
-  df[ts] = pd.to_datetime(df[ts])
-  df[ts] = df[ts].dt.tz_convert(tz)
-  
-  download_button_id = st.session_state['widget_id'].__next__()
+    tz = os.getenv("TZ", "US/Pacific")
+    ts = model.INITTIMESTAMP
 
-  col1, col2 = st.columns(2)
+    df[ts] = pd.to_datetime(df[ts])
+    df[ts] = df[ts].dt.tz_convert(tz)
 
-  with col1:
-    groupby = st.radio("Group by", [
-      "Half Hour",
-      "Hour", 
-      "Day", 
-    ])
-    groupby_choice = {
-      "Half Hour": group_by_halfhr,
-      "Hour"     : group_by_hour,
-      "Day"      : group_by_day,
-    }
-  query = groupby_choice[groupby](df)
-  
-  if not query.empty:
-    with col2:
-        st.download_button(
-             label= "Download CSV",
-             data = query.to_csv(),
-             mime = 'text/csv',
-             key  = download_button_id,
-        )
+    download_button_id = st.session_state['widget_id'].__next__()
 
-  return query
+    col1, col2 = st.columns(2)
+
+    with col1:
+        groupby = st.radio("Group by", [
+            "Half Hour",
+            "Hour",
+            "Day",
+        ])
+        groupby_choice = {
+            "Half Hour": group_by_halfhr,
+            "Hour": group_by_hour,
+            "Day": group_by_day,
+        }
+    query = groupby_choice[groupby](df)
+
+    if not query.empty:
+        with col2:
+            st.download_button(
+                label="Download",
+                data=query.to_csv(),
+                mime='text/csv',
+                key=download_button_id,
+            )
+
+    return query
+
 
 def group_by_hour(df: pd.DataFrame) -> pd.Series:
-  ts = model.INITTIMESTAMP
-  df['date_str'] = df[ts].dt.strftime('%-I%p')
-  query = """
-SELECT date_str "Date", COUNT(1) "Count"
+    ts = model.INITTIMESTAMP
+    df[model.DATE_STR] = df[ts].dt.strftime('%-I%p')
+    query = """
+SELECT {date_str} "Date", COUNT(1) "Count"
  FROM df
- GROUP BY date_str
- ORDER BY strptime(date_str,'%-I%p')
-"""
-  query = duckdb.query(query).to_df()
+ GROUP BY {date_str}
+ ORDER BY strptime({date_str},'%-I%p')
+""".format(date_str=model.DATE_STR)
+    query = duckdb.query(query).to_df()
 
-  return query
+    return query
+
 
 def group_by_day(df: pd.DataFrame) -> pd.Series:
-  ts = model.INITTIMESTAMP
-  df["date_str"] = df[ts].dt.strftime('%B %d, %Y')
-  query = """
+    ts = model.INITTIMESTAMP
+    df[model.DATE_STR] = df[ts].dt.strftime('%B %d, %Y')
+    query = """
 SELECT date_str "Date", COUNT(1) "Count"
  FROM df
  GROUP BY date_str
  ORDER BY strptime(date_str, '%B %d, %Y')
 """
-  query = duckdb.query(query).to_df()
+    query = duckdb.query(query).to_df()
 
-  return query
+    return query
+
 
 def group_by_halfhr(df: pd.DataFrame) -> pd.Series:
-  ts = model.INITTIMESTAMP
-  # Group into 30 minute intervals
-  df[ts] = df[ts].dt.floor('30T')
-  df['date_str'] = df[ts].dt.strftime('%-I:%M%p')
-  query = """
+    ts = model.INITTIMESTAMP
+    # Group into 30 minute intervals
+    df[ts] = df[ts].dt.floor('30T')
+    df['date_str'] = df[ts].dt.strftime('%-I:%M%p')
+    query = """
 SELECT date_str "Date", COUNT(1) "Count"
  FROM df
  GROUP BY date_str
  ORDER BY strptime(date_str, '%-I:%M%p')
 """
-  query = duckdb.query(query).to_df()
+    query = duckdb.query(query).to_df()
 
-  return query
+    return query

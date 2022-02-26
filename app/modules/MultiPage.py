@@ -1,7 +1,9 @@
-import streamlit as st
 import itertools
 
-class MultiPage: 
+import streamlit as st
+
+
+class MultiPage:
     """Framework for combining multiple streamlit applications."""
 
     def __init__(self):
@@ -11,8 +13,8 @@ class MultiPage:
         # To make sure each widget is unique, we request the next one
         # from the below generator
         st.session_state['widget_id'] = itertools.count()
-    
-    def add_page(self, title, func) -> None: 
+
+    def add_page(self, title, func) -> None:
         """Class Method to Add pages to the project
 
         Args:
@@ -22,9 +24,9 @@ class MultiPage:
         """
 
         self.pages.append({
-                "title": title, 
-                "function": func,
-            })
+            "title": title,
+            "function": func,
+        })
 
     def run(self):
         # Dropdown to select the page to run
@@ -32,8 +34,8 @@ class MultiPage:
         st.sidebar.header("TechLine Analytics")
 
         page = st.sidebar.radio(
-            'Go to', 
-            self.pages, 
+            'Go to',
+            self.pages,
             format_func=lambda pages: pages['title']
         )
 
