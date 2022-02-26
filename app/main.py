@@ -37,7 +37,8 @@ def main():
 
 def config():
     st.set_page_config(
-        page_title="TL Analytics",
+        page_title="TechLine Analytics",
+        page_icon="T"
         # initial_sidebar_state = "collapsed",
     )
 

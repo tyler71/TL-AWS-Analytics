@@ -1,6 +1,9 @@
 import itertools
 
 import streamlit as st
+import os
+
+
 
 
 class MultiPage:
@@ -32,6 +35,7 @@ class MultiPage:
         # Dropdown to select the page to run
 
         st.sidebar.header("TechLine Analytics")
+        st.sidebar.markdown(body=sha())
 
         page = st.sidebar.radio(
             'Go to',
@@ -41,3 +45,9 @@ class MultiPage:
 
         # run the app function 
         page['function']()
+
+def sha():
+    sha = os.getenv("GIT_SHA", "dev")
+    git_url = os.getenv("GIT_COMMIT_URL", "https://github.com/tyler71/TL-AWS-Analytics/commit")
+    sha_msg = f"*[{sha[:6]}]({git_url}/{sha})*"
+    return sha_msg

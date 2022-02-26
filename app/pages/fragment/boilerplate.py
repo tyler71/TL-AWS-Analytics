@@ -4,6 +4,7 @@ from datetime import date, timedelta
 import pandas as pd
 import streamlit as st
 from modules import model
+from pages.fragment.footer import footer
 
 logger = logging.getLogger()
 
@@ -48,6 +49,9 @@ def boilerplate() -> pd.DataFrame:
         st.stop()
 
     # df[model.INITTIMESTAMP] = pd.to_datetime(df[model.INITTIMESTAMP])
+
+
+    footer()
 
     return df
 

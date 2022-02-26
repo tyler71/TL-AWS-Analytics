@@ -62,3 +62,4 @@ def filter_today(df: pd.DataFrame, start_date=None) -> pd.DataFrame:
     df = df.drop('temp_date', axis=1)
 
     return df
+
