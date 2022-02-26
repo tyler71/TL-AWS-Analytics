@@ -4,6 +4,7 @@ import os
 from modules import MultiPage
 from pages import summary, flowusage
 import streamlit as st
+import time
 
 ####
 # TL AWS Analytics with Streamlit
@@ -18,6 +19,9 @@ def main():
 
   app = MultiPage.MultiPage()
   config()
+
+  # Set app to timezone set in TZ
+  time.tzset()
 
   pages = [
     ("Summary", summary.app),
