@@ -54,12 +54,10 @@ def extract_from_file(data: str) -> typing.Generator[str, None, None]:
 if bucket_name and bucket_prefix:
     logging.debug(f"using S3")
 
-
     def get_days(days: int, start_date) -> typing.Generator[str, None, None]:
         for dir_day in get_window_days(days, prefix=bucket_prefix, start_date=start_date):
             logger.debug(f"s3 get_days: Retrieving files from {dir_day}")
             yield from get_dir(dir_day)
-
 
     @st.experimental_memo(ttl=450)
     def get_dir(dir_day) -> typing.List[str]:
@@ -79,6 +77,7 @@ if bucket_name and bucket_prefix:
         result = list()
         for file_obj in discovered_files:
             for data in load_file(file_obj[0], file_obj[1]):
+                logger.debug(f"S3 get_dir: Loading file {file_obj}")
                 result.append(data)
 
         logger.debug(f"S3 get_dir: {result}")
