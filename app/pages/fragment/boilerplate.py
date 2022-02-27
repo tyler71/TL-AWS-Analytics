@@ -3,6 +3,7 @@ from datetime import date, timedelta
 
 import pandas as pd
 import streamlit as st
+
 from modules import model
 from pages.fragment.footer import footer
 
@@ -23,14 +24,12 @@ def boilerplate() -> pd.DataFrame:
     with col1:
         date_pick = st.date_input(label='Date', min_value=(date.today() - timedelta(days=730)), max_value=date.today())
     with col2:
-        if st.button('Clear Cache'):
-            st.experimental_memo.clear()
-            logger.info("boilerplate, clear cache: Memo cleared")
-            st.experimental_singleton.clear()
-            logger.info("boilerplate, clear cache: Singleton cleared")
+        clear_cache_button()
+        if date_pick != date.today():
+            revert_to_today_button()
         historical = st.checkbox('Historical')
 
-    # Ensure slider doesn't get farther then 2 years ago
+    # Ensure slider doesn't get farther than 2 years ago
     if historical:
         t = date.today()
         days_left = (date_pick - (t - timedelta(days=730))).days + 10
@@ -50,7 +49,6 @@ def boilerplate() -> pd.DataFrame:
 
     # df[model.INITTIMESTAMP] = pd.to_datetime(df[model.INITTIMESTAMP])
 
-
     footer()
 
     return df
@@ -61,3 +59,17 @@ def add_widget(df, widget):
         st.info("Empty")
     else:
         widget(df)
+
+def clear_cache_button():
+    button_id = st.session_state['widget_id'].__next__()
+    if st.button('Clear Cache', key=button_id):
+        st.experimental_memo.clear()
+        logger.info("boilerplate, clear cache: Memo cleared")
+        st.experimental_singleton.clear()
+        logger.info("boilerplate, clear cache: Singleton cleared")
+
+def revert_to_today_button():
+    button_id = st.session_state['widget_id'].__next__()
+    if st.button('Today', key=button_id):
+        date.today()
+
