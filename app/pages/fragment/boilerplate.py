@@ -67,9 +67,3 @@ def clear_cache_button():
         logger.info("boilerplate, clear cache: Memo cleared")
         st.experimental_singleton.clear()
         logger.info("boilerplate, clear cache: Singleton cleared")
-
-def revert_to_today_button():
-    button_id = st.session_state['widget_id'].__next__()
-    if st.button('Today', key=button_id):
-        date.today()
-
