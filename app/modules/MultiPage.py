@@ -1,7 +1,7 @@
 import itertools
+import os
 
 import streamlit as st
-
 from modules.helper import sha
 
 
@@ -31,7 +31,7 @@ class MultiPage:
         })
 
     def run(self):
-        st.sidebar.header("TechLine Analytics")
+        st.sidebar.header(os.getenv('APP_NAME', 'Set APP_NAME'))
         st.sidebar.markdown(body=sha())
 
         page = st.sidebar.radio(

@@ -37,7 +37,7 @@ def main():
 
 def config():
     st.set_page_config(
-        page_title="TechLine Analytics",
+        page_title=os.getenv('APP_NAME', "Set APP_NAME"),
         page_icon="T"
         # initial_sidebar_state = "collapsed",
     )
