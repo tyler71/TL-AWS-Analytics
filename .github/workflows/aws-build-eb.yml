@@ -61,6 +61,13 @@ jobs:
           sed -i "s;image:.*;image: ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:${{ steps.v.outputs.date }};" docker-compose.yml
           zip -r ../deploy.zip .
 
+      - name: Upload deploy artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name:           beanstalk-deploy.zip
+          path:           ./deploy.zip
+          retention-days: 14
+
       - name: Deploy to EB
         uses: einaregilsson/beanstalk-deploy@v20
         with:
