@@ -34,9 +34,9 @@ jobs:
           context: .
           push: true
           tags: |
-            ghcr.io/${{ github.actor }}/tl-aws-analytics:latest
-            ghcr.io/${{ github.actor }}/tl-aws-analytics:${{ steps.v.outputs.date }}
-            ghcr.io/${{ github.actor }}/tl-aws-analytics:build_${{ github.run_number }}
+            ghcr.io/${{ github.actor }}/${{ github.event.repository.name }}:latest
+            ghcr.io/${{ github.actor }}/${{ github.event.repository.name }}:${{ steps.v.outputs.date }}
+            ghcr.io/${{ github.actor }}/${{ github.event.repository.name }}:build_${{ github.run_number }}
           build-args: |
             SET_GIT_SHA=${{ github.sha }}
           cache-from: type=gha

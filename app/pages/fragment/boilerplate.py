@@ -25,8 +25,6 @@ def boilerplate() -> pd.DataFrame:
         date_pick = st.date_input(label='Date', min_value=(date.today() - timedelta(days=730)), max_value=date.today())
     with col2:
         clear_cache_button()
-        if date_pick != date.today():
-            revert_to_today_button()
         historical = st.checkbox('Historical')
 
     # Ensure slider doesn't get farther than 2 years ago
