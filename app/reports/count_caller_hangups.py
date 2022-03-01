@@ -43,16 +43,27 @@ def count_caller_hangups(df: pd.DataFrame) -> pd.Series:
 def group_by_str(df, col: str, date_str: str):
     ts = model.INITTIMESTAMP
     df[model.DATE_STR] = df[ts].dt.strftime(date_str)
+    if model.VOICEMAIL not in df.columns:
+        df[model.VOICEMAIL] = None
+    if model.AGENT not in df.columns:
+        df[model.AGENT] = None
     query = """
 SELECT {col} "Last Flow",
        {date_str},
        COUNT(1) count
  FROM df
  WHERE disconnectreason='CUSTOMER_DISCONNECT'
-   AND Agent_Username is null
+   AND {an} is null
+   AND {vm} is null
+   AND '*Queue*' NOT LIKE {flows}
  GROUP BY {col}, {date_str}
  ORDER BY {col} ASC, {date_str} ASC, count DESC
-""".format(col=col, date_str=model.DATE_STR)
+""".format(col=col, 
+           date_str=model.DATE_STR, 
+           flows=model.FLOWS,
+           vm=model.VOICEMAIL,
+           an=model.AGENT,
+          )
     query = duckdb.query(query).to_df()
     query = query.pivot_table(
         index="Last Flow",

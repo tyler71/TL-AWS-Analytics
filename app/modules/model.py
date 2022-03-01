@@ -15,6 +15,8 @@ LAST_FLOW = "attributes_lastflow"
 INITTIMESTAMP = "initiationtimestamp"
 INIT30MIN = "InitTimeStamp30MinSegment"
 DATE_STR = "date_str"
+VOICEMAIL = "savecallrecording"
+AGENT = "agent_username"
 
 ## Data loading
 # The outcome here is to load a dataframe of last n days
@@ -46,11 +48,11 @@ def get_dataframe(days, start_date=None) -> pd.DataFrame:
 
         df = pd.read_json('\n'.join(retrieved_days), lines=True)
 
-        if not df.empty and days == 0:
-        #     # UTC can return some results prior to the localized
-        #     # time of today. When the filter is just for today,
-        #     # we use a little extra logic to ensure it's just
-        #     # today's results returned
+        if not df.empty and days == 0 and not mock_data:
+            # UTC can return some results prior to the localized
+            # time of today. When the filter is just for today,
+            # we use a little extra logic to ensure it's just
+            # today's results returned
             df = filter_today(df, start_date)
         return df
     else:
