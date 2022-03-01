@@ -35,7 +35,7 @@ def boilerplate() -> pd.DataFrame:
     else:
         days = st.slider(days_from_msg(date_pick), 0, 30, value=0, step=1)
 
-    if days < 100:
+    if days < 31:
         loading_text = f"Loading {days} days"
     else:
         loading_text = f"Loading {days} days, there may be a delay"
