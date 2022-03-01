@@ -24,7 +24,6 @@ def boilerplate() -> pd.DataFrame:
     with col1:
         date_pick = st.date_input(label='Date', min_value=(date.today() - timedelta(days=730)), max_value=date.today())
     with col2:
-        # clear_cache_button()
         rerun_button()
         historical = st.checkbox('Historical')
 
@@ -32,9 +31,9 @@ def boilerplate() -> pd.DataFrame:
     if historical:
         t = date.today()
         days_left = (date_pick - (t - timedelta(days=730))).days + 10
-        days = st.slider(f'Days from {date_pick}', 0, days_left, value=0, step=10)
+        days = st.slider(days_from_msg(date_pick), 0, days_left, value=0, step=10)
     else:
-        days = st.slider(f'Days from {date_pick}', 0, 30, value=0, step=1)
+        days = st.slider(days_from_msg(date_pick), 0, 30, value=0, step=1)
 
     if days < 100:
         loading_text = f"Loading {days} days"
@@ -71,4 +70,13 @@ def rerun_button():
     button_id = st.session_state['widget_id'].__next__()
     if st.button('Refresh', key=button_id):
       st.experimental_rerun()
-      
+
+def days_from_msg(date_picked):
+    msg = "Days from {date}{today_str}"
+    today = date.today()
+    formatted_date = date_picked.strftime('%b %d, %Y')
+    if date_picked == today:
+        msg = msg.format(date=formatted_date, today_str=' (Today)')
+    else:
+        msg = msg.format(date=formatted_date, today_str='')
+    return msg
