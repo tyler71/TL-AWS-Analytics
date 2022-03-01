@@ -5,11 +5,11 @@ import duckdb
 import pandas as pd
 import streamlit as st
 from modules import model
+from pages.fragment.download_button import download_button
 
 
 def count_caller_hangups(df: pd.DataFrame) -> pd.Series:
     radio_id = st.session_state['widget_id'].__next__()
-    download_button_id = st.session_state['widget_id'].__next__()
 
     tz = os.getenv("TZ", "US/Pacific")
     ts = model.INITTIMESTAMP
@@ -30,12 +30,7 @@ def count_caller_hangups(df: pd.DataFrame) -> pd.Series:
 
     if not query.empty:
         with col2:
-            st.download_button(
-                label="Download",
-                data=query.to_csv(),
-                mime='text/csv',
-                key=download_button_id,
-            )
+          download_button(query)
 
     return query
 

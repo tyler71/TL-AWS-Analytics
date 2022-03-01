@@ -6,6 +6,7 @@ import pandas as pd
 import streamlit as st
 from modules import model
 
+from pages.fragment.download_button import download_button
 
 def count_calls(df: pd.DataFrame) -> pd.Series:
     tz = os.getenv("TZ", "US/Pacific")
@@ -13,8 +14,6 @@ def count_calls(df: pd.DataFrame) -> pd.Series:
 
     df[ts] = pd.to_datetime(df[ts])
     df[ts] = df[ts].dt.tz_convert(tz)
-
-    download_button_id = st.session_state['widget_id'].__next__()
 
     col1, col2 = st.columns(2)
 
@@ -33,12 +32,7 @@ def count_calls(df: pd.DataFrame) -> pd.Series:
 
     if not query.empty:
         with col2:
-            st.download_button(
-                label="Download",
-                data=query.to_csv(),
-                mime='text/csv',
-                key=download_button_id,
-            )
+          download_button(query)
 
     return query
 
