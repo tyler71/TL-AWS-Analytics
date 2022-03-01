@@ -24,7 +24,8 @@ def boilerplate() -> pd.DataFrame:
     with col1:
         date_pick = st.date_input(label='Date', min_value=(date.today() - timedelta(days=730)), max_value=date.today())
     with col2:
-        clear_cache_button()
+        # clear_cache_button()
+        rerun_button()
         historical = st.checkbox('Historical')
 
     # Ensure slider doesn't get farther than 2 years ago
@@ -65,3 +66,9 @@ def clear_cache_button():
         logger.info("boilerplate, clear cache: Memo cleared")
         st.experimental_singleton.clear()
         logger.info("boilerplate, clear cache: Singleton cleared")
+
+def rerun_button():
+    button_id = st.session_state['widget_id'].__next__()
+    if st.button('Refresh', key=button_id):
+      st.experimental_rerun()
+      
