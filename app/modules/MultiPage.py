@@ -40,5 +40,10 @@ class MultiPage:
             format_func=lambda pages: pages['title']
         )
 
+        st.sidebar.markdown('---')
+
+        st.session_state['historical'] = st.sidebar.checkbox('Historical')
+        st.session_state['show_download'] = st.sidebar.checkbox('Show Download')
+      
         # run the app function 
         page['function']()

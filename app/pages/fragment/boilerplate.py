@@ -25,10 +25,10 @@ def boilerplate() -> pd.DataFrame:
         date_pick = st.date_input(label='Date', min_value=(date.today() - timedelta(days=730)), max_value=date.today())
     with col2:
         rerun_button()
-        historical = st.checkbox('Historical')
+        # clear_cache_button()
 
     # Ensure slider doesn't get farther than 2 years ago
-    if historical:
+    if 'historical' in st.session_state and st.session_state['historical'] is True:
         t = date.today()
         days_left = (date_pick - (t - timedelta(days=730))).days + 10
         days = st.slider(days_from_msg(date_pick), 0, days_left, value=0, step=10)
