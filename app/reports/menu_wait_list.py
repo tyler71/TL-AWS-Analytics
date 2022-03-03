@@ -6,6 +6,16 @@ from modules import model
 from pages.fragment.download_button import download_button
 
 def menu_wait_list(df: pd.DataFrame) -> pd.Series:
+    input_id = st.session_state['widget_id'].__next__()
+
+    min_wait = st.number_input("Min Minutes",
+                               min_value=1,
+                               max_value=99,
+                               value=2,
+                               step=1,
+                               key=input_id,
+                              )
+  
     ts = model.INITTIMESTAMP
     q_ts = model.ENQUEUED_TS
     df["conv_ts"] = (pd.to_datetime(df[ts])).astype('int64') / 10 ** 9
@@ -15,8 +25,8 @@ def menu_wait_list(df: pd.DataFrame) -> pd.Series:
 SELECT *, ({queuets}::int - {initts}::int) / 60 "Menu Wait (M)"
  FROM df
   WHERE {queuets} is not null
-    AND "Menu Wait (M)" > 1
-""".format(queuets=q_ts, initts="conv_ts")
+    AND "Menu Wait (M)" >= {min_wait}
+""".format(queuets=q_ts, initts="conv_ts", min_wait=min_wait)
     query = duckdb.query(query).to_df()
 
     return query
