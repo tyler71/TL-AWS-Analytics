@@ -30,10 +30,17 @@ def ctr_list(df: pd.DataFrame, columns=list()) -> None:
   
     df[model.DATE_STR] = df[ts].dt.strftime('%b %d, %Y %I:%M%p')
     df = df.sort_values(by=[ts], ascending=False)
+    df = df.reset_index(drop=True)
 
     df = df[["contactid", model.DATE_STR] + columns]
     df['contactid'] = df['contactid'].apply(lambda x: ctr_addr.format(id=x, ctr_url=ctr_url))
 
     download_button(df)
 
-    st.markdown(df.to_markdown(index=False))
+    if len(df) > 99:
+      df = df.head(99)
+      st.markdown(df.to_markdown(index=False))
+      st.info("Limited to 100 rows")
+      
+    else:
+      st.markdown(df.to_markdown(index=False))
