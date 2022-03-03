@@ -5,7 +5,7 @@ import time
 import streamlit as st
 
 from modules import MultiPage
-from pages import summary, usage
+from pages import summary, usage, ctr
 
 
 ####
@@ -27,6 +27,7 @@ def main():
     pages = [
         ("Summary", summary.app),
         ("Contact Flow Usage", usage.app),
+        ("CTR Debugging", ctr.app)
     ]
 
     for page in pages:

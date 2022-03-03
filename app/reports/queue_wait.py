@@ -56,5 +56,4 @@ SELECT {date_str} "Date", avg(queue_duration) "Wait Time"
  ORDER BY strptime({date_str},'{stfr_str}')
 """.format(date_str=model.DATE_STR, stfr_str=stfr_str)
     query = duckdb.query(query).to_df()
-    print(query)
     return query

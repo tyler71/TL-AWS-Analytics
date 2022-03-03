@@ -11,5 +11,5 @@ def app():
     st.header("Count Callers")
     xy_bar_chart(count_calls(df), "Date", "Count")
 
-    st.header("Queue Wait Time")
+    st.header("Average Queue Wait Time")
     xy_bar_chart(queue_wait(df), "Date", "Wait Time")

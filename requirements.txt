@@ -4,3 +4,4 @@ numpy==1.22.2
 streamlit
 duckdb==0.3.2
 boto3==1.21.6
+tabulate

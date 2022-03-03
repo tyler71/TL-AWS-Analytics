@@ -25,7 +25,7 @@ jobs:
         id:   v
         run: |
           echo "::set-output name=date::$(date '+%m_%d_%Y')"
-          echo "::set-output name=reponame::techline-analytics"
+          echo "::set-output name=reponame::$(echo ${{ github.event.repository.name }} | tr '[:upper:]' '[:lower:]')"
 
       - name: Login to Amazon ECR
         id:   login-ecr

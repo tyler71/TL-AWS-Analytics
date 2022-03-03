@@ -1089,6 +1089,17 @@ validators = "*"
 watchdog = {version = "*", markers = "platform_system != \"Darwin\""}
 
 [[package]]
+name = "tabulate"
+version = "0.8.9"
+description = "Pretty-print tabular data"
+category = "main"
+optional = false
+python-versions = "*"
+
+[package.extras]
+widechars = ["wcwidth"]
+
+[[package]]
 name = "terminado"
 version = "0.13.1"
 description = "Tornado websocket backend for the Xterm.js Javascript terminal emulator library."
@@ -1272,7 +1283,7 @@ testing = ["pytest (>=6)", "pytest-checkdocs (>=2.4)", "pytest-flake8", "pytest-
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8"
-content-hash = "b427127f184617f7fa1a6dbdd95757b4b3453174bd1c874c29e1994cce122502"
+content-hash = "cc0aedca49aadb4c21b3292c11b02ec10733a951c7dd0fcfe174b7ef87fcb073"
 
 [metadata.files]
 altair = [
@@ -2020,6 +2031,10 @@ stack-data = [
 streamlit = [
     {file = "streamlit-1.5.0-py2.py3-none-any.whl", hash = "sha256:ac2ad021a4dc5407ca523890b60e940d383705d62f8084c58d62ac7ae877f54a"},
     {file = "streamlit-1.5.0.tar.gz", hash = "sha256:ba4ddbce6d28726b70ffa68b923c43813137a7a35f994f73eb44c57577ac9023"},
+]
+tabulate = [
+    {file = "tabulate-0.8.9-py3-none-any.whl", hash = "sha256:d7c013fe7abbc5e491394e10fa845f8f32fe54f8dc60c6622c6cf482d25d47e4"},
+    {file = "tabulate-0.8.9.tar.gz", hash = "sha256:eb1d13f25760052e8931f2ef80aaf6045a6cceb47514db8beab24cded16f13a7"},
 ]
 terminado = [
     {file = "terminado-0.13.1-py3-none-any.whl", hash = "sha256:f446b522b50a7aa68b5def0a02893978fb48cb82298b0ebdae13003c6ee6f198"},
