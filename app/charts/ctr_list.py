@@ -19,11 +19,12 @@ def ctr_list(df: pd.DataFrame, columns=list()) -> None:
     if not ctr_url:
         st.error("CTR_RECORD_URL must be set")
         st.stop()
-      
-    ctr_addr = '[{id}]({ctr_url}/{id})'
+
 
     tz = os.getenv("TZ", "US/Pacific")
     ts = model.INITTIMESTAMP
+  
+    ctr_addr = '[{id}]({ctr_url}/{id}?tz={tz})'
 
     df[ts] = pd.to_datetime(df[ts])
     df[ts] = df[ts].dt.tz_convert(tz)
@@ -33,7 +34,7 @@ def ctr_list(df: pd.DataFrame, columns=list()) -> None:
     df = df.reset_index(drop=True)
 
     df = df[["contactid", model.DATE_STR] + columns]
-    df['contactid'] = df['contactid'].apply(lambda x: ctr_addr.format(id=x, ctr_url=ctr_url))
+    df['contactid'] = df['contactid'].apply(lambda x: ctr_addr.format(id=x, ctr_url=ctr_url, tz=tz))
 
     download_button(df)
 
