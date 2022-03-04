@@ -11,8 +11,8 @@ def app():
     df = boilerplate()
 
     reports = {
-      'Wait Time in Menu': (menu_wait_list, ["Menu Wait (M)"]),
-      'Wait Time in Queue': (queue_wait_list, ["Queue Wait (S)"]),
+      'Wait Time in Menu': (menu_wait_list, ["Menu Wait"]),
+      'Wait Time in Queue': (queue_wait_list, ["Queue Wait"]),
     }
 
     options = list(reports.keys())

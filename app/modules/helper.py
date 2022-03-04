@@ -22,7 +22,7 @@ def get_window_days(days: int, prefix='', suffix='', start_date=None) -> typing.
             yield ''.join((prefix, calc_date.strftime('%Y/%m/%d'), suffix))
 
 
-def minutes_to_hour_minutes(minutes: int) -> str:
+def minute_to_hour_minute_second(seconds=None, minutes=None, hours=None) -> str:
     hours = math.floor(minutes / 60)
     minutes = minutes % 60
 
@@ -42,6 +42,12 @@ def minutes_to_hour_minutes(minutes: int) -> str:
 
     return msg
 
+def time_to_hour_minute_second(hours=0, minutes=0, seconds=0) -> str:
+  delta_seconds = timedelta(seconds=seconds)
+  delta_minutes = timedelta(minutes=minutes)
+  delta_hours   = timedelta(hours=hours)
+  set_time = delta_seconds + delta_minutes + delta_hours
+  return set_time.__str__()
 
 def sha():
     sha = os.getenv("GIT_SHA", "dev")

@@ -3,6 +3,8 @@ import pandas as pd
 import streamlit as st
 from modules import model
 
+from modules.helper import time_to_hour_minute_second
+
 from pages.fragment.custom_button import download_button
 
 def menu_wait_list(df: pd.DataFrame) -> pd.Series:
@@ -22,11 +24,12 @@ def menu_wait_list(df: pd.DataFrame) -> pd.Series:
     df[q_ts] = df[q_ts].fillna(0)
     df[q_ts] = (pd.to_datetime(df[q_ts])).astype('int64') / 10 ** 9
     query = """
-SELECT *, ({queuets}::int - {initts}::int) / 60 "Menu Wait (M)"
+SELECT *, ({queuets}::int - {initts}::int) "Menu Wait"
  FROM df
   WHERE {queuets} is not null
-    AND "Menu Wait (M)" >= {min_wait}
+    AND "Menu Wait" / 60 >= {min_wait}
 """.format(queuets=q_ts, initts="conv_ts", min_wait=min_wait)
     query = duckdb.query(query).to_df()
+    query["Menu Wait"] = query["Menu Wait"].apply(lambda x: time_to_hour_minute_second(seconds=x))
 
     return query
