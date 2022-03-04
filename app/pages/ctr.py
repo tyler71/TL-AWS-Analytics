@@ -12,7 +12,7 @@ def app():
 
     reports = {
       'Wait Time in Menu': (menu_wait_list, ["Menu Wait (M)"]),
-      'Wait Time in Queue': (queue_wait_list, ["Queue Wait (M)"]),
+      'Wait Time in Queue': (queue_wait_list, ["Queue Wait (S)"]),
     }
 
     options = list(reports.keys())
