@@ -8,10 +8,10 @@ from pages.fragment.custom_button import download_button
 def queue_wait_list(df: pd.DataFrame) -> pd.Series:
     input_id = st.session_state['widget_id'].__next__()
 
-    min_wait = st.number_input("Mininum Minutes",
+    min_wait = st.number_input("Mininum Seconds",
                                min_value=1,
                                max_value=99,
-                               value=2,
+                               value=30,
                                step=1,
                                key=input_id,
                               )
