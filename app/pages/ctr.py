@@ -2,6 +2,7 @@ import streamlit as st
 from pages.fragment.boilerplate import boilerplate
 from charts.ctr_list import ctr_list
 from reports.ctr_debug.menu_wait_list import menu_wait_list
+from reports.ctr_debug.queue_wait_list import queue_wait_list
 
 
 def app():
@@ -10,7 +11,8 @@ def app():
     df = boilerplate()
 
     reports = {
-      'Wait Time in Menu': (menu_wait_list, ["Menu Wait (M)"])
+      'Wait Time in Menu': (menu_wait_list, ["Menu Wait (M)"]),
+      'Wait Time in Queue': (queue_wait_list, ["Queue Wait (M)"]),
     }
 
     options = list(reports.keys())
