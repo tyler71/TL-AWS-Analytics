@@ -5,7 +5,7 @@ import duckdb
 import pandas as pd
 import streamlit as st
 from modules import model
-from pages.fragment.download_button import download_button
+from pages.fragment.custom_button import download_button
 
 
 def count_caller_hangups(df: pd.DataFrame) -> pd.Series:

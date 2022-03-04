@@ -6,7 +6,7 @@ from pprint import pprint
 import os
 from functools import partial
 
-from pages.fragment.download_button import download_button
+from pages.fragment.custom_button import download_button
 
 from modules import model
 

@@ -1,7 +1,7 @@
 import streamlit as st
 from pages.fragment.boilerplate import boilerplate
 from charts.ctr_list import ctr_list
-from reports.menu_wait_list import menu_wait_list
+from reports.ctr_debug.menu_wait_list import menu_wait_list
 
 
 def app():

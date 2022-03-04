@@ -1,5 +1,5 @@
 import streamlit as st
-from pages.fragment.download_button import download_button
+from pages.fragment.custom_button import download_button
 from modules import model
 import os
 import pandas as pd

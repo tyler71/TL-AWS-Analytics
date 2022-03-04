@@ -6,6 +6,7 @@ import streamlit as st
 
 from modules import model
 from pages.fragment.footer import footer
+from pages.fragment.custom_button import rerun_button
 
 logger = logging.getLogger()
 
@@ -24,16 +25,15 @@ def boilerplate() -> pd.DataFrame:
     with col1:
         date_pick = st.date_input(label='Date', min_value=(date.today() - timedelta(days=730)), max_value=date.today())
     with col2:
-        rerun_button()
+        # Ensure slider doesn't get farther than 2 years ago
+        if 'historical' in st.session_state and st.session_state['historical'] is True:
+            t = date.today()
+            days_left = (date_pick - (t - timedelta(days=730))).days + 10
+            days = st.slider(days_from_msg(date_pick), 0, days_left, value=0, step=10)
+        else:
+            days = st.slider(days_from_msg(date_pick), 0, 30, value=0, step=1)
         # clear_cache_button()
 
-    # Ensure slider doesn't get farther than 2 years ago
-    if 'historical' in st.session_state and st.session_state['historical'] is True:
-        t = date.today()
-        days_left = (date_pick - (t - timedelta(days=730))).days + 10
-        days = st.slider(days_from_msg(date_pick), 0, days_left, value=0, step=10)
-    else:
-        days = st.slider(days_from_msg(date_pick), 0, 30, value=0, step=1)
 
     if days < 31:
         loading_text = f"Loading {days} days"
@@ -65,11 +65,6 @@ def clear_cache_button():
         logger.info("boilerplate, clear cache: Memo cleared")
         st.experimental_singleton.clear()
         logger.info("boilerplate, clear cache: Singleton cleared")
-
-def rerun_button():
-    button_id = st.session_state['widget_id'].__next__()
-    if st.button('Refresh', key=button_id):
-      st.experimental_rerun()
 
 def days_from_msg(date_picked):
     msg = "Days from {date}{today_str}"

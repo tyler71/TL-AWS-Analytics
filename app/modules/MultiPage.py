@@ -40,6 +40,9 @@ class MultiPage:
             format_func=lambda pages: pages['title']
         )
 
+        if st.sidebar.button('Refresh'):
+            st.experimental_rerun()
+
         st.sidebar.markdown('---')
 
         st.session_state['historical'] = st.sidebar.checkbox('Historical')

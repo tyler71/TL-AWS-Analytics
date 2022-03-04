@@ -3,7 +3,7 @@ import pandas as pd
 import streamlit as st
 from modules import model
 
-from pages.fragment.download_button import download_button
+from pages.fragment.custom_button import download_button
 
 def menu_wait_list(df: pd.DataFrame) -> pd.Series:
     input_id = st.session_state['widget_id'].__next__()
