@@ -17,7 +17,7 @@ def queue_wait_list(df: pd.DataFrame) -> pd.Series:
                               )
   
     query = """
-SELECT *, queue_duration "Queue Wait (M)"
+SELECT *, queue_duration "Queue Wait (S)"
  FROM df
   WHERE queue_duration is not null
     AND queue_duration > {queue_wait}
