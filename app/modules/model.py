@@ -41,7 +41,7 @@ mock_data = os.getenv("MOCK_DATA_DIR", False)
 logger = logging.getLogger()
 
 
-@st.experimental_memo(ttl=300)
+@st.experimental_memo(ttl=30)
 def get_dataframe(days, start_date=None) -> pd.DataFrame:
     if (bucket_name and bucket_prefix) or mock_data:
         retrieved_days = list(get_days(days, start_date))
