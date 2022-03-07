@@ -50,7 +50,7 @@ def group_by(df, stfr_str, interval=None):
         df[ts] = df[ts].dt.floor(interval)
     df[model.DATE_STR] = df[ts].dt.strftime(stfr_str)
     query = """
-SELECT {date_str} "Date", avg(queue_duration) "Wait Time"
+SELECT {date_str} "Date", median(queue_duration) "Wait Time"
  FROM df
   WHERE queue_duration is not null
     AND queue_duration > 1.0
