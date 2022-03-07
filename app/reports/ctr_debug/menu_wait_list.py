@@ -1,5 +1,6 @@
 import duckdb
 import pandas as pd
+import numpy as np
 import streamlit as st
 from modules import model
 
@@ -23,6 +24,9 @@ def menu_wait_list(df: pd.DataFrame) -> pd.Series:
     ts = model.INITTIMESTAMP
     q_ts = model.ENQUEUED_TS
     df["conv_ts"] = (pd.to_datetime(df[ts])).astype('int64') / 10 ** 9
+  
+    if model.ENQUEUED_TS not in df:
+      df[q_ts] = np.nan
     df[q_ts] = df[q_ts].fillna(0)
     df[q_ts] = (pd.to_datetime(df[q_ts])).astype('int64') / 10 ** 9
     query = """
