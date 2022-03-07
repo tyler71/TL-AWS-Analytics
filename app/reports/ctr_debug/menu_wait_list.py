@@ -5,11 +5,11 @@ import streamlit as st
 from modules import model
 
 from modules.helper import time_to_hour_minute_second
-from modules.helper import show_empty_dec
+from modules.helper import empty_df_msg
 
 from pages.fragment.custom_button import download_button
 
-@show_empty_dec
+@empty_df_msg
 def menu_wait_list(df: pd.DataFrame) -> pd.Series:
     input_id = st.session_state['widget_id'].__next__()
 

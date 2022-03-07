@@ -6,19 +6,19 @@ from modules import model
 
 from pages.fragment.custom_button import download_button
 from modules.helper import time_to_hour_minute_second
-from modules.helper import show_empty_dec
+from modules.helper import empty_df_msg
 
-@show_empty_dec
+@empty_df_msg
 def queue_wait_list(df: pd.DataFrame) -> pd.Series:
-    input_id = st.session_state['widget_id'].__next__()
 
     q_dur = model.QUEUE_DUR
 
     if q_dur not in df:
       df[q_dur] = np.nan
 
+    input_id = st.session_state['widget_id'].__next__()
     min_wait = st.number_input("Mininum Seconds",
-                               min_value=1, max_value=99,
+                               min_value=1,
                                value=30,
                                step=1,
                                key=input_id,

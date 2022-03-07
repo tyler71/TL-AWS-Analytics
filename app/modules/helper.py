@@ -57,7 +57,7 @@ def sha():
     sha_msg = f"*[{sha[:6]}]({git_url}/{sha})*"
     return sha_msg
 
-def show_empty_dec(func):
+def empty_df_msg(func):
   # Writes out "No data available" if it is empty
   # after output
   @functools.wraps(func)
