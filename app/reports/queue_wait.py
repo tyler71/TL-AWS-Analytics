@@ -53,7 +53,7 @@ def group_by(df, stfr_str, interval=None):
 SELECT {date_str} "Date", avg(queue_duration) "Wait Time"
  FROM df
   WHERE queue_duration is not null
-    AND queue_duration > 20.0
+    AND queue_duration > 1.0
  GROUP BY {date_str}
  ORDER BY strptime({date_str},'{stfr_str}')
 """.format(date_str=model.DATE_STR, stfr_str=stfr_str)
