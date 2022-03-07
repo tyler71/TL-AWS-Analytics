@@ -5,7 +5,9 @@ from modules import model
 
 from pages.fragment.custom_button import download_button
 from modules.helper import time_to_hour_minute_second
+from modules.helper import show_empty_dec
 
+@show_empty_dec
 def queue_wait_list(df: pd.DataFrame) -> pd.Series:
     input_id = st.session_state['widget_id'].__next__()
 

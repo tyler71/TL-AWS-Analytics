@@ -2,6 +2,8 @@ import math
 import os
 import typing
 from datetime import datetime, timedelta
+import functools
+import streamlit as st
 
 import pytz
 
@@ -54,3 +56,15 @@ def sha():
     git_url = os.getenv("GIT_COMMIT_URL", "https://github.com/tyler71/TL-AWS-Analytics/commit")
     sha_msg = f"*[{sha[:6]}]({git_url}/{sha})*"
     return sha_msg
+
+def show_empty_dec(func):
+  # Writes out "No data available" if it is empty
+  # after output
+  @functools.wraps(func)
+  def report_if_empty(*args, **kwargs):
+    output = func(*args, **kwargs)
+    if output.empty:
+      st.info("No data available")
+      st.stop()
+    return output
+  return report_if_empty

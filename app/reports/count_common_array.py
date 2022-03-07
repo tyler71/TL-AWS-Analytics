@@ -10,7 +10,9 @@ from modules import model
 from pages.fragment.custom_button import download_button
 logger = logging.getLogger()
 
+from modules.helper import show_empty_dec
 
+@show_empty_dec
 def count_common_array(df: pd.DataFrame, col: str) -> pd.Series:
     radio_id = st.session_state['widget_id'].__next__()
 

@@ -8,6 +8,9 @@ from modules import model
 
 from pages.fragment.custom_button import download_button
 
+from modules.helper import show_empty_dec
+
+@show_empty_dec
 def count_calls(df: pd.DataFrame) -> pd.Series:
     tz = os.getenv("TZ", "US/Pacific")
     ts = model.INITTIMESTAMP

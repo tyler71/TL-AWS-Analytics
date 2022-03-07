@@ -10,6 +10,8 @@ from pages.fragment.custom_button import download_button
 
 from modules import model
 
+from modules.helper import show_empty_dec
+@show_empty_dec
 def queue_wait(df: pd.DataFrame) -> pd.Series:
     radio_id = st.session_state['widget_id'].__next__()
     tz = os.getenv("TZ", "US/Pacific")

@@ -6,8 +6,9 @@ import pandas as pd
 import streamlit as st
 from modules import model
 from pages.fragment.custom_button import download_button
+from modules.helper import show_empty_dec
 
-
+@show_empty_dec
 def count_caller_hangups(df: pd.DataFrame) -> pd.Series:
     radio_id = st.session_state['widget_id'].__next__()
 

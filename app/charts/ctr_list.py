@@ -12,9 +12,6 @@ def ctr_list(df: pd.DataFrame, columns=list()) -> None:
     # CTR_RECORD_URL: The link to a CTR in Amazon Connect, eg
     # https://domain.tld/contact-trace-records/details
 
-    if df.empty:
-      st.info("Empty")
-      st.stop()
     ctr_url = os.getenv("CTR_RECORD_URL", False)
     if not ctr_url:
         st.error("CTR_RECORD_URL must be set")
