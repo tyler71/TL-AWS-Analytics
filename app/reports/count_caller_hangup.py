@@ -5,14 +5,13 @@ import duckdb
 import pandas as pd
 import streamlit as st
 from modules import model
-
 from pages.fragment.custom_button import download_button
-
 from modules.helper import empty_df_msg
 
 @empty_df_msg
-def count_calls(df: pd.DataFrame) -> pd.Series:
+def count_caller_hangup(df: pd.DataFrame) -> pd.Series:
     radio_id = st.session_state['widget_id'].__next__()
+
     tz = os.getenv("TZ", "US/Pacific")
     ts = model.INITTIMESTAMP
 
@@ -28,9 +27,9 @@ def count_calls(df: pd.DataFrame) -> pd.Series:
             "Day",
         ], key=radio_id)
         groupby_choice = {
-            "Half Hour": partial(group_by, stfr_str='%-I:%M%p', interval='30T'),
-            "Hour": partial(group_by, stfr_str='%-I%p'),
-            "Day": partial(group_by, stfr_str='%B %d, %Y'),
+            "Half Hour": partial(group_by_str, stfr_str='%-I:%M%p', interval='30T'),
+            "Hour": partial(group_by_str, stfr_str='%-I%p'),
+            "Day": partial(group_by_str, stfr_str='%B %d, %Y'),
         }
     query = groupby_choice[groupby](df)
 
@@ -40,18 +39,27 @@ def count_calls(df: pd.DataFrame) -> pd.Series:
 
     return query
 
-
-def group_by(df: pd.DataFrame, stfr_str, interval=None) -> pd.Series:
+def group_by_str(df, stfr_str, interval=None):
     ts = model.INITTIMESTAMP
-    if interval is not None:  # group into specified intervals
-        df[ts] = df[ts].dt.floor(interval)
     df[model.DATE_STR] = df[ts].dt.strftime(stfr_str)
+    if model.VOICEMAIL not in df.columns:
+        df[model.VOICEMAIL] = None
+    if model.AGENT not in df.columns:
+        df[model.AGENT] = None
     query = """
-SELECT {date_str} "Date", COUNT(1) "Count"
+SELECT {date_str} "Date",
+       COUNT(1) count
  FROM df
+ WHERE disconnectreason='CUSTOMER_DISCONNECT'
+   AND {an} is null
+   AND {vm} is null
+   AND '*Queue*' NOT LIKE {flows}
  GROUP BY {date_str}
- ORDER BY strptime({date_str},'{stfr_str}')
-""".format(date_str=model.DATE_STR, stfr_str=stfr_str)
+ ORDER BY {date_str} ASC, count DESC
+""".format(date_str=model.DATE_STR, 
+           flows=model.FLOWS,
+           vm=model.VOICEMAIL,
+           an=model.AGENT,
+          )
     query = duckdb.query(query).to_df()
-
     return query
