@@ -55,8 +55,9 @@ SELECT {date_str} "Date",
    AND {vm} is null
    AND '*Queue*' NOT LIKE {flows}
  GROUP BY {date_str}
- ORDER BY {date_str} ASC, count DESC
+ ORDER BY strptime({date_str},'{stfr_str}')
 """.format(date_str=model.DATE_STR, 
+           stfr_str=stfr_str,
            flows=model.FLOWS,
            vm=model.VOICEMAIL,
            an=model.AGENT,
