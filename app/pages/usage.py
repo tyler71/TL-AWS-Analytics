@@ -3,7 +3,7 @@ from functools import partial
 import streamlit as st
 from modules import model
 from pages.fragment.boilerplate import boilerplate, add_widget
-from reports.count_caller_hangups import count_caller_hangups
+from reports.flow_caller_hangup import flow_caller_hangup
 from reports.count_common_array import count_common_array
 
 
@@ -26,5 +26,5 @@ def app():
     add_widget(count_common_array(df, model.MENUS), partial_dataframe_widget)
 
     st.header("Caller Hangups by Flow")
-    hangups = count_caller_hangups(df)
+    hangups = flow_caller_hangup(df)
     add_widget(hangups, st.dataframe)

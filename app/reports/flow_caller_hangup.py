@@ -9,7 +9,7 @@ from pages.fragment.custom_button import download_button
 from modules.helper import empty_df_msg
 
 @empty_df_msg
-def count_caller_hangups(df: pd.DataFrame) -> pd.Series:
+def flow_caller_hangup(df: pd.DataFrame) -> pd.Series:
     radio_id = st.session_state['widget_id'].__next__()
 
     tz = os.getenv("TZ", "US/Pacific")
