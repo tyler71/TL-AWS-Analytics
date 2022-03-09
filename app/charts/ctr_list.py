@@ -11,6 +11,7 @@ def ctr_list(df: pd.DataFrame, columns=list()) -> None:
     # Shown as markdown table
     # CTR_RECORD_URL: The link to a CTR in Amazon Connect, eg
     # https://domain.tld/contact-trace-records/details
+    if df is None: return
 
     ctr_url = os.getenv("CTR_RECORD_URL", False)
     if not ctr_url:
@@ -38,7 +39,7 @@ def ctr_list(df: pd.DataFrame, columns=list()) -> None:
     if len(df) > 99:
       df = df.head(99)
       st.markdown(df.to_markdown(index=False))
-      st.info("Limited to 100 rows")
+      st.info("View limited to 100 rows")
       
     else:
       st.markdown(df.to_markdown(index=False))

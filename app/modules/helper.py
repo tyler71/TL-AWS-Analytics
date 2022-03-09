@@ -65,6 +65,7 @@ def empty_df_msg(func):
     output = func(*args, **kwargs)
     if output.empty:
       st.info("No data available")
-      st.stop()
+      # st.stop()
+      return None
     return output
   return report_if_empty
