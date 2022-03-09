@@ -3,6 +3,7 @@ from pages.fragment.boilerplate import boilerplate
 from charts.ctr_list import ctr_list
 from reports.ctr_debug.menu_wait_list import menu_wait_list
 from reports.ctr_debug.queue_wait_list import queue_wait_list
+from reports.ctr_debug.caller_hangup_list import caller_hangup_list
 
 
 def app():
@@ -13,6 +14,7 @@ def app():
     reports = {
       'Wait Time in Menu': (menu_wait_list, ["Menu Wait"]),
       'Wait Time in Queue': (queue_wait_list, ["Queue Wait"]),
+      'Caller Hangups': (caller_hangup_list, list()),
     }
 
     options = list(reports.keys())
