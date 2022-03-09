@@ -4,7 +4,6 @@ import streamlit as st
 import numpy as np
 from modules import model
 
-from pages.fragment.custom_button import download_button
 from modules.helper import time_to_hour_minute_second
 from modules.helper import empty_df_msg
 

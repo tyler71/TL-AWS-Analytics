@@ -3,9 +3,7 @@ from functools import partial
 
 import duckdb
 import pandas as pd
-import streamlit as st
 from modules import model
-from pages.fragment.custom_button import download_button
 from modules.helper import empty_df_msg
 
 @empty_df_msg
@@ -27,7 +25,4 @@ SELECT *
           )
     query = duckdb.query(query).to_df()
 
-    if not df.empty:
-          download_button(query)
-      
     return query
