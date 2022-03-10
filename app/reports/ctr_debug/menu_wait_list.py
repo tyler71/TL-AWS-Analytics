@@ -36,4 +36,4 @@ SELECT *, ({queuets}::int - {initts}::int) "Menu Wait"
     query = duckdb.query(query).to_df()
     query["Menu Wait"] = query["Menu Wait"].apply(lambda x: time_to_hour_minute_second(seconds=x))
 
-    return query
+    return (query, ["Menu Wait"])

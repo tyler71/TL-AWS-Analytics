@@ -25,4 +25,4 @@ SELECT *
           )
     query = duckdb.query(query).to_df()
 
-    return query
+    return (query, list())

@@ -32,5 +32,5 @@ SELECT *, {queue_dur} "Queue Wait"
     query = duckdb.query(query).to_df()
     query["Queue Wait"] = query["Queue Wait"].apply(lambda x: time_to_hour_minute_second(seconds=x))
 
-    return query
+    return (query, ["Queue Wait"])
   

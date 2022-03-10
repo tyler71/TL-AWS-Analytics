@@ -36,4 +36,4 @@ def custom_list(df: pd.DataFrame) -> pd.Series:
             )
       query = duckdb.query(query).to_df()
   
-      return query
+      return (query, columns.split(','))

@@ -13,10 +13,10 @@ def app():
     df = boilerplate()
 
     reports = {
-      'Wait Time in Menu': (menu_wait_list, ["Menu Wait"]),
-      'Wait Time in Queue': (queue_wait_list, ["Queue Wait"]),
-      'Custom List': (custom_list, list()),
-      'Caller Hangups': (caller_hangup_list, list()),
+      'Wait Time in Menu': menu_wait_list,
+      'Wait Time in Queue': queue_wait_list,
+      'Custom List': custom_list,
+      'Caller Hangups': caller_hangup_list,
     }
 
     options = list(reports.keys())
@@ -24,5 +24,7 @@ def app():
   
     selected_report = st.selectbox("Select Report", options)
 
-    output = reports[selected_report][0](df)
-    ctr_list(output, reports[selected_report][1])
+    output = reports[selected_report](df)
+    if output is not None:
+      query, columns = output
+      ctr_list(query, columns)
