@@ -1,6 +1,6 @@
 # This stage installs all the requirements for the main app.
 # This will be copied later to the production stage
-FROM python:3.8-slim AS build_app
+FROM python:3.8-slim AS build_app_environment
 
 RUN apt-get update \
  && apt-get -y install g++ \
@@ -51,9 +51,9 @@ ENV GIT_SHA=$SET_GIT_SHA
 
 ENV DATA_DIR /data
 
-COPY --from=build_app           /usr/local         /usr/local
-COPY --from=build_oauth         /opt/oauth-proxy   /opt/oauth-proxy
-COPY --from=build_reverse_proxy /opt/reverse_proxy /opt/reverse_proxy
+COPY --from=build_app_environment /usr/local         /usr/local
+COPY --from=build_oauth           /opt/oauth-proxy   /opt/oauth-proxy
+COPY --from=build_reverse_proxy   /opt/reverse_proxy /opt/reverse_proxy
 
 RUN mkdir /app /data               \
  && groupadd application           \
@@ -66,9 +66,6 @@ RUN mkdir /app /data               \
       --gid 1000                   \
       --system
 
-COPY ./app /app
-RUN chown -R application: /app /data
-
 COPY ./config/init/supervisord.conf   /etc/supervisord.conf
 COPY ./config/init.sh                 /init.sh
 COPY ./config/oauth/oauth.sh          /opt/oauth-proxy/
@@ -76,5 +73,8 @@ COPY ./config/reverse_proxy/Caddyfile /etc/Caddyfile
 
 EXPOSE 8080
 EXPOSE 4443
+
+COPY ./app /app
+RUN chown -R application: /app /data
 
 CMD bash /init.sh
