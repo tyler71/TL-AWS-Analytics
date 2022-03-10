@@ -63,7 +63,7 @@ def empty_df_msg(func):
   @functools.wraps(func)
   def report_if_empty(*args, **kwargs):
     output = func(*args, **kwargs)
-    if output.empty:
+    if output is None or output.empty:
       st.info("No data available")
       # st.stop()
       return None
