@@ -34,7 +34,7 @@ def count_calls(df: pd.DataFrame) -> pd.Series:
         }
     query = groupby_choice[groupby](df)
 
-    if not query.empty:
+    if not query[0].empty:
         with col2:
           download_button(query)
 
@@ -54,4 +54,4 @@ SELECT {date_str} "Date", COUNT(1) "Count"
 """.format(date_str=model.DATE_STR, stfr_str=stfr_str)
     query = duckdb.query(query).to_df()
 
-    return query
+    return (query, ["Date", "Count"])

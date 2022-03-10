@@ -29,7 +29,7 @@ def flow_caller_hangup(df: pd.DataFrame) -> pd.Series:
         }
         query = groupby_choice[groupby](df, model.LAST_FLOW)
 
-    if not query.empty:
+    if not query[0].empty:
         with col2:
           download_button(query)
 
@@ -67,4 +67,4 @@ SELECT {col} "Last Flow",
         values='count',
         fill_value=0,
     )
-    return query
+    return (query, ["Last Flow", date_str, "count"])

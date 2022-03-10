@@ -47,7 +47,7 @@ def queue_wait(df: pd.DataFrame) -> pd.Series:
     }
     query = groupby_choice[groupby](df)
 
-    if not query.empty:
+    if not query[0].empty:
         with col3:
           download_button(query)
 
@@ -74,4 +74,5 @@ SELECT {date_str} "Date", {a}(queue_duration) "Wait Time"
   a=average,
   )
     query = duckdb.query(query).to_df()
-    return query
+  
+    return (query, ["Date", "Wait Time"])

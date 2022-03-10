@@ -33,7 +33,7 @@ def count_caller_hangup(df: pd.DataFrame) -> pd.Series:
         }
     query = groupby_choice[groupby](df)
 
-    if not query.empty:
+    if not query[0].empty:
         with col2:
           download_button(query)
 
@@ -63,4 +63,4 @@ SELECT {date_str} "Date",
            an=model.AGENT,
           )
     query = duckdb.query(query).to_df()
-    return query
+    return (query, ["Date", "count"])

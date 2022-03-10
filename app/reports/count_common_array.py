@@ -59,4 +59,4 @@ SELECT {col}, {date_str}, COUNT(1) count
         fill_value=0,
     )
 
-    return query
+    return (query, [col, date_str, "count"])

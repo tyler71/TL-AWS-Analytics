@@ -10,10 +10,16 @@ def app():
     df = boilerplate()
 
     st.header("Call Count")
-    xy_bar_chart(count_calls(df), "Date", "Count")
+    o = count_calls(df)
+    query, x, y = o[0], o[1][0], o[1][1]
+    xy_bar_chart(query, x, y)
 
     st.header("Queue Wait Time (Avg)")
-    xy_area_chart(queue_wait(df), "Date", "Wait Time")
+    o = queue_wait(df)
+    query, x, y = o[0], o[1][0], o[1][1]
+    xy_area_chart(query, x, y)
 
     st.header("Hangup Count")
-    xy_bar_chart(count_caller_hangup(df), "Date", "count")
+    o = count_caller_hangup(df)
+    query, x, y = o[0], o[1][0], o[1][1]
+    xy_bar_chart(query, x, y)

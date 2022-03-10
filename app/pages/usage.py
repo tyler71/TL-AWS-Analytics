@@ -20,11 +20,11 @@ def app():
     partial_dataframe_widget = partial(st.dataframe, height=600, width=1000)
 
     st.header("Most Common Flows")
-    add_widget(count_common_array(df, model.FLOWS), partial_dataframe_widget)
+    add_widget(count_common_array(df, model.FLOWS)[0], partial_dataframe_widget)
 
     st.header("Most Common Menu Options")
-    add_widget(count_common_array(df, model.MENUS), partial_dataframe_widget)
+    add_widget(count_common_array(df, model.MENUS)[0], partial_dataframe_widget)
 
     st.header("Caller Hangups by Flow")
-    hangups = flow_caller_hangup(df)
+    hangups = flow_caller_hangup(df)[0]
     add_widget(hangups, st.dataframe)
