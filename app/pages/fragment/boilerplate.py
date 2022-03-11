@@ -6,7 +6,6 @@ import streamlit as st
 
 from modules import model
 from pages.fragment.footer import footer
-from pages.fragment.custom_button import rerun_button
 
 logger = logging.getLogger()
 
