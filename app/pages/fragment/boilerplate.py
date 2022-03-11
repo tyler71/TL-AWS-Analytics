@@ -19,6 +19,7 @@ HISTORICAL_METRIC = "Historical"
 
 
 def boilerplate() -> pd.DataFrame:
+    footer()
     days = 0
     col1, col2 = st.columns(2)
 
@@ -47,10 +48,7 @@ def boilerplate() -> pd.DataFrame:
 
     # df[model.INITTIMESTAMP] = pd.to_datetime(df[model.INITTIMESTAMP])
 
-    footer()
-
     return df
-
 
 def add_widget(df, widget):
     if df.empty:
