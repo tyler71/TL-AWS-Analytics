@@ -48,6 +48,8 @@ def group_by_str(df, stfr_str, interval=None):
         df[model.VOICEMAIL] = None
     if model.AGENT not in df.columns:
         df[model.AGENT] = None
+    if interval is not None:  # group into specified intervals
+        df[c_ts] = df[c_ts].dt.floor(interval)
     query = """
 SELECT {date_str} "Date",
        COUNT(1) count

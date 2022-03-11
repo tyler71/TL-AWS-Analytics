@@ -4,7 +4,7 @@ from pages.fragment.boilerplate import boilerplate
 from reports.count_calls import count_calls
 from reports.queue_wait import queue_wait
 from reports.count_caller_hangup import count_caller_hangup
-from reports.call_to_connect import call_to_connect
+from reports.time_to_agent import time_to_agent
 
 
 def app():
@@ -16,8 +16,8 @@ def app():
       query, x, y = o[0], o[1][0], o[1][1]
       xy_bar_chart(query, x, y)
 
-    st.header("Time to Agent")
-    o = call_to_connect(df)
+    st.header("Time to Agent (Avg)")
+    o = time_to_agent(df)
     if o is not None:
       query, x, y = o[0], o[1][0], o[1][1]
       xy_bar_chart(query, x, y)

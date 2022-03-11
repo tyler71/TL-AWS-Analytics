@@ -9,7 +9,7 @@ from pages.fragment.custom_button import download_button
 from modules.helper import empty_df_msg
 
 @empty_df_msg
-def call_to_connect(df: pd.DataFrame) -> pd.Series:
+def time_to_agent(df: pd.DataFrame) -> pd.Series:
     groupby_id = st.session_state['widget_id'].__next__()
     avg_radio_id = st.session_state['widget_id'].__next__()
     tz = os.getenv("TZ", "US/Pacific")
@@ -53,19 +53,25 @@ def call_to_connect(df: pd.DataFrame) -> pd.Series:
 
 
 def group_by(df, stfr_str, average=None, interval=None):
+    ts = model.INITTIMESTAMP
+    c_ts = "CONVERTED_TS"
+  
     agt_ts = 'agent_connectedtoagenttimestamp'
     if agt_ts not in df.columns:
         df[agt_ts] = None
-    ts = model.INITTIMESTAMP
-    c_ts = "CONVERTED_TS"
+      
     if interval is not None:  # group into specified intervals
-        df['rounded_ts'] = df[c_ts].dt.floor(interval)
-    df[model.DATE_STR] = df['rounded_ts'].dt.strftime(stfr_str)
-    df['time_to_connect'] = df[agt_ts] - df[ts]
+        df[c_ts] = df[c_ts].dt.floor(interval)
+    df[model.DATE_STR] = df[c_ts].dt.strftime(stfr_str)
+
+    init = pd.to_datetime(df[ts])
+    connected = pd.to_datetime(df[agt_ts])
+    df['time_to_connect'] = (connected - init).dt.total_seconds()
+  
     query = """
-SELECT {date_str} "Date", {a}() "Time to Connect"
+SELECT {date_str} "Date", {a}(time_to_connect) "Time to Connect"
  FROM df
-  WHERE {agt_ts} is not null
+  WHERE time_to_connect is not null
  GROUP BY {date_str}
  ORDER BY strptime({date_str}, '{stfr_str}')
 """.format(
