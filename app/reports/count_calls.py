@@ -15,9 +15,10 @@ def count_calls(df: pd.DataFrame) -> pd.Series:
     radio_id = st.session_state['widget_id'].__next__()
     tz = os.getenv("TZ", "US/Pacific")
     ts = model.INITTIMESTAMP
-
-    df[ts] = pd.to_datetime(df[ts])
-    df[ts] = df[ts].dt.tz_convert(tz)
+    c_ts = "CONVERTED_TS"
+  
+    df[c_ts] = pd.to_datetime(df[ts])
+    df[c_ts] = df[c_ts].dt.tz_convert(tz)
 
     col1, col2 = st.columns(2)
 
@@ -38,14 +39,15 @@ def count_calls(df: pd.DataFrame) -> pd.Series:
         with col2:
           download_button(query)
 
+    df = df.drop([c_ts], axis=1)
     return query
 
 
 def group_by(df: pd.DataFrame, stfr_str, interval=None) -> pd.Series:
-    ts = model.INITTIMESTAMP
+    c_ts = "CONVERTED_TS"
     if interval is not None:  # group into specified intervals
-        df[ts] = df[ts].dt.floor(interval)
-    df[model.DATE_STR] = df[ts].dt.strftime(stfr_str)
+        df[c_ts] = df[c_ts].dt.floor(interval)
+    df[model.DATE_STR] = df[c_ts].dt.strftime(stfr_str)
     query = """
 SELECT {date_str} "Date", COUNT(1) "Count"
  FROM df

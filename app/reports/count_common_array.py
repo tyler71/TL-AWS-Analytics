@@ -18,9 +18,10 @@ def count_common_array(df: pd.DataFrame, col: str) -> pd.Series:
 
     tz = os.getenv("TZ", "US/Pacific")
     ts = model.INITTIMESTAMP
+    c_ts = "CONVERTED_TS"
 
-    df[ts] = pd.to_datetime(df[ts])
-    df[ts] = df[ts].dt.tz_convert(tz)
+    df[c_ts] = pd.to_datetime(df[ts])
+    df[c_ts] = df[c_ts].dt.tz_convert(tz)
 
     col1, col2 = st.columns(2)
 
@@ -36,13 +37,14 @@ def count_common_array(df: pd.DataFrame, col: str) -> pd.Series:
     with col2:
       download_button(query)
 
+    df = df.drop([c_ts], axis=1)
     return query
 
 
 def group_by_str(df: pd.DataFrame, col: str, date_str: str) -> pd.Series:
-    ts = model.INITTIMESTAMP
+    c_ts = "CONVERTED_TS"
 
-    df[model.DATE_STR] = df[ts].dt.strftime(date_str)
+    df[model.DATE_STR] = df[c_ts].dt.strftime(date_str)
     df = df.explode(col)
     query = """
 SELECT {col}, {date_str}, COUNT(1) count

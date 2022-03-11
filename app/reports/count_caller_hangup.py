@@ -14,9 +14,10 @@ def count_caller_hangup(df: pd.DataFrame) -> pd.Series:
 
     tz = os.getenv("TZ", "US/Pacific")
     ts = model.INITTIMESTAMP
+    c_ts = "CONVERTED_TS"
 
-    df[ts] = pd.to_datetime(df[ts])
-    df[ts] = df[ts].dt.tz_convert(tz)
+    df[c_ts] = pd.to_datetime(df[ts])
+    df[c_ts] = df[c_ts].dt.tz_convert(tz)
 
     col1, col2 = st.columns(2)
 
@@ -37,11 +38,12 @@ def count_caller_hangup(df: pd.DataFrame) -> pd.Series:
         with col2:
           download_button(query)
 
+    df = df.drop([c_ts], axis=1)
     return query
 
 def group_by_str(df, stfr_str, interval=None):
-    ts = model.INITTIMESTAMP
-    df[model.DATE_STR] = df[ts].dt.strftime(stfr_str)
+    c_ts = "CONVERTED_TS"
+    df[model.DATE_STR] = df[c_ts].dt.strftime(stfr_str)
     if model.VOICEMAIL not in df.columns:
         df[model.VOICEMAIL] = None
     if model.AGENT not in df.columns:
