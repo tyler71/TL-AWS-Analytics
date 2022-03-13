@@ -47,7 +47,7 @@ def time_to_agent(df: pd.DataFrame) -> pd.Series:
 
     if not query[0].empty:
         with col3:
-          download_button(query)
+          download_button(query[0])
 
     return query
 

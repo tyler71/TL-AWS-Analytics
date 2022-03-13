@@ -32,7 +32,7 @@ def flow_caller_hangup(df: pd.DataFrame) -> pd.Series:
 
     if not query[0].empty:
         with col2:
-          download_button(query)
+          download_button(query[0])
 
     df = df.drop([c_ts], axis=1)
     return query

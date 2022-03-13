@@ -35,7 +35,7 @@ def count_common_array(df: pd.DataFrame, col: str) -> pd.Series:
         query = groupby_choice[groupby](df, col)
 
     with col2:
-      download_button(query)
+      download_button(query[0])
 
     df = df.drop([c_ts], axis=1)
     return query
