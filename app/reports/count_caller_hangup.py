@@ -50,6 +50,8 @@ def group_by_str(df, stfr_str, interval=None):
         df[model.AGENT] = None
     if interval is not None:  # group into specified intervals
         df[c_ts] = df[c_ts].dt.floor(interval)
+    df[model.DATE_STR] = df[c_ts].dt.strftime(stfr_str)
+
     query = """
 SELECT {date_str} "Date",
        COUNT(1) count
