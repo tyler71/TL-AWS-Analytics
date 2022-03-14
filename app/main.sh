@@ -23,6 +23,6 @@ fi
 echo "Starting server.."
 cd "$script_dir"
 streamlit run main.py                       \
+  --server.headless                   true
 #  --server.enableCORS                 false \
 #  --server.enableXsrfProtection       false \
-  --server.headless                   true
