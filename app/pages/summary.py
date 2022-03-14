@@ -29,8 +29,9 @@ def app():
       query, x, y = o[0], o[1][0], o[1][1]
       xy_area_chart(query, x, y)
 
-    st.header("Hangup Count")
-    o = count_caller_hangup(df)
-    if o is not None:
-      query, x, y = o[0], o[1][0], o[1][1]
-      xy_bar_chart(query, x, y)
+    # Hiding hangup count until it's more implemented
+    # st.header("Hangup Count")
+    # o = count_caller_hangup(df)
+    # if o is not None:
+    #   query, x, y = o[0], o[1][0], o[1][1]
+    #   xy_bar_chart(query, x, y)
