@@ -1,5 +1,6 @@
 import duckdb
 import pandas as pd
+import numpy as np
 import streamlit as st
 from modules import model
 import os
@@ -56,17 +57,21 @@ def group_by(df, stfr_str, average=None, interval=None):
     ts = model.INITTIMESTAMP
     c_ts = "CONVERTED_TS"
   
-    agt_ts = 'agent_connectedtoagenttimestamp'
-    if agt_ts not in df.columns:
-        df[agt_ts] = None
       
     if interval is not None:  # group into specified intervals
         df[c_ts] = df[c_ts].dt.floor(interval)
     df[model.DATE_STR] = df[c_ts].dt.strftime(stfr_str)
 
-    init = pd.to_datetime(df[ts])
-    connected = pd.to_datetime(df[agt_ts])
-    df['time_to_connect'] = (connected - init).dt.total_seconds()
+    # If no calls ever connected to to agent for this
+    # we just set it as NaN
+    agt_ts = 'agent_connectedtoagenttimestamp'
+    if agt_ts not in df.columns:
+        df[agt_ts] = np.nan
+        df['time_to_connect'] = np.nan
+    else:
+        init = pd.to_datetime(df[ts])
+        connected = pd.to_datetime(df[agt_ts])
+        df['time_to_connect'] = (connected - init).dt.total_seconds()
   
     query = """
 SELECT {date_str} "Date", {a}(time_to_connect) "Time to Connect"
