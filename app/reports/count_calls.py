@@ -60,16 +60,16 @@ def group_by(df: pd.DataFrame, stfr_str, interval=None, agent=None) -> pd.Series
     df[model.DATE_STR] = df[c_ts].dt.strftime(stfr_str)
 
     agt_ts = 'agent_connectedtoagenttimestamp'
-    init_mtd = 'initiationmethod'
     if agt_ts not in df.columns:
         df[agt_ts] = np.nan
 
     where_str = ''
     if agent == "Agent":
-      where_str = f"WHERE {agt_ts} is not null AND {init_mtd}='INBOUND'"
+      where_str = f"AND {agt_ts} is not null"
     query = """
 SELECT {date_str} "Date", COUNT(1) "Count"
  FROM df
+ WHERE initiationmethod='INBOUND'
  {where_str}
  GROUP BY {date_str}
  ORDER BY strptime({date_str},'{stfr_str}')
