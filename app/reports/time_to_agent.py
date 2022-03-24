@@ -77,6 +77,7 @@ def group_by(df, stfr_str, average=None, interval=None):
 SELECT {date_str} "Date", {a}(time_to_connect) "Time to Connect"
  FROM df
   WHERE time_to_connect is not null
+    AND initiationmethod='INBOUND'
  GROUP BY {date_str}
  ORDER BY strptime({date_str}, '{stfr_str}')
 """.format(
