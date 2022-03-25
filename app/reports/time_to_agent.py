@@ -65,13 +65,13 @@ def group_by(df, stfr_str, average=None, interval=None):
     # If no calls ever connected to to agent for this
     # we just set it as NaN
     agt_ts = 'agent_connectedtoagenttimestamp'
-    if agt_ts not in df.columns:
-        df[agt_ts] = np.nan
-        df['time_to_connect'] = np.nan
-    else:
+    if agt_ts in df.columns:
         init = pd.to_datetime(df[ts])
         connected = pd.to_datetime(df[agt_ts])
         df['time_to_connect'] = (connected - init).dt.total_seconds()
+    else:
+        df[agt_ts] = np.nan
+        df['time_to_connect'] = np.nan
   
     query = """
 SELECT {date_str} "Date", {a}(time_to_connect) "Time to Connect"
