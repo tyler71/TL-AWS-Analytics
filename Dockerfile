@@ -74,7 +74,7 @@ COPY ./config/reverse_proxy/Caddyfile /etc/Caddyfile
 EXPOSE 8080
 EXPOSE 4443
 
-COPY ./app /app
-RUN chown -R application: /app /data
+COPY --chown=application:application ./app /app
+# RUN chown -R application: /app /data
 
 CMD bash /init.sh
