@@ -17,7 +17,7 @@ INIT30MIN = "InitTimeStamp30MinSegment"
 ENQUEUED_TS = "queue_enqueuetimestamp"
 QUEUE_DUR = "queue_duration"
 DATE_STR = "date_str"
-VOICEMAIL = "savecallrecording"
+VOICEMAIL = "attributes_savecallrecording"
 AGENT = "agent_username"
 
 ## Data loading
