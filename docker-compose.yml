@@ -6,7 +6,7 @@ services:
       context: .
     labels:
       caddy: ${hostname}
-      caddy.reverse_proxy: "{{ upstreams ${port}} }"
+      caddy.reverse_proxy: "{{ upstreams ${port} }}"
 #   ports:
 #     - 8080:8501
     volumes:
