@@ -6,15 +6,17 @@ services:
       context: .
     labels:
       caddy: ${hostname}
-      caddy.reverse_proxy: "{{upstreams ${port}}}"
+      caddy.reverse_proxy: "{{ upstreams ${port}} }"
+#   ports:
+#     - 8080:8501
     volumes:
       - "./data/app:/data"
       - "./app:/app"
     env_file:
       - app.env
     networks:
-      - caddy
+      - public
 
 networks:
-  caddy:
+  public:
     external: true
