@@ -30,7 +30,7 @@ RUN tar -xf oauth.tar.gz                \
 
 # caddy handles http/s termination. It is built from scratch
 # This allows for additional modules later if we need it.
-FROM caddy:builder AS build_reverse_proxy
+FROM caddy:2.4.1-builder AS build_reverse_proxy
 ENV XCADDY_SKIP_CLEANUP=1
 ENV BUILD_VERSION=v2.4.6
 
