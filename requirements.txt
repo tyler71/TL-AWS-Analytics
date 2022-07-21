@@ -1,7 +1,7 @@
 pandas
 supervisor
 numpy==1.22.2
-streamlit==1.8.1
+streamlit==1.9.2
 duckdb==0.3.2
 boto3==1.21.6
 tabulate
