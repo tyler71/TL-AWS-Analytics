@@ -1,0 +1,37 @@
+version: "3.9"
+
+services:
+  tl-analytics:
+    image: ${IMAGE}
+    environment:
+      APP_NAME: ${{ APP_NAME }}
+      BUCKET_NAME: ${BUCKET_NAME}
+      BUCKET_PREFIX: ${BUCKET_PREFIX}
+      CTR_RECORD_URL: ${CTR_RECORD_URL}
+      LOGLEVEL: ${LOGLEVEL}
+      OAUTH2_PROXY_BANNER: ${OAUTH2_PROXY_BANNER}
+      OAUTH2_PROXY_CLIENT_ID: ${OAUTH2_PROXY_CLIENT_ID}
+      OAUTH2_PROXY_CLIENT_SECRET: ${OAUTH2_PROXY_CLIENT_SECRET}
+      OAUTH2_PROXY_COOKIE_SECRET: ${OAUTH2_PROXY_COOKIE_SECRET}
+      OAUTH2_PROXY_CUSTOM_SIGN_IN_LOGO: ${OAUTH2_PROXY_CUSTOM_SIGN_IN_LOGO}
+      OAUTH2_PROXY_EMAIL_DOMAINS: ${OAUTH2_PROXY_EMAIL_DOMAINS}
+      OAUTH2_PROXY_FOOTER: ${OAUTH2_PROXY_FOOTER}
+      OAUTH2_PROXY_OIDC_ISSUER_URL: ${OAUTH2_PROXY_OIDC_ISSUER_URL}
+      OAUTH2_PROXY_PROVIDER: ${OAUTH2_PROXY_PROVIDER}
+      OAUTH2_PROXY_REVERSE_PROXY: ${OAUTH2_PROXY_REVERSE_PROXY}
+      STREAMLIT_SERVER_COOKIESECRET: ${STREAMLIT_SERVER_COOKIESECRET}
+      TZ: ${TZ}
+    networks:
+      - public
+    deploy:
+      replicas: 1
+      placement:
+        constraints:
+          - node.platform.os == linux
+      labels:
+        caddy: ${HOST}
+        caddy.reverse_proxy: "{{ upstreams 8080 }}"
+
+networks:
+  public:
+    external: true

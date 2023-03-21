@@ -3,7 +3,7 @@ name: Build / Push AWS ECR; Deploy to AWS Beanstalk
 on:
   push:
     branches:
-    - production
+    - none
 
 jobs:
   deploy:

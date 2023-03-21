@@ -1,3 +1,16 @@
+FROM python:3.8-slim AS init
+
+RUN mkdir /app /data               \
+ && groupadd application           \
+      --gid 1000                   \
+ && useradd application            \
+      --base-dir /app              \
+      --home-dir /home/application \
+      --create-home                \
+      --uid 1000                   \
+      --gid 1000                   \
+      --system
+
 # This stage installs all the requirements for the main app.
 # This will be copied later to the production stage
 FROM python:3.8-slim AS build_app_environment
@@ -44,7 +57,7 @@ RUN mkdir -p /opt/reverse_proxy  \
 # We also copy in config files
 # A application user is created. While the image doesn't force non-root
 # Supervisor later on drops root for all apps it handles
-FROM python:3.8-slim AS production
+FROM init AS production
 
 ARG SET_GIT_SHA=dev
 ENV GIT_SHA=$SET_GIT_SHA
@@ -55,26 +68,13 @@ COPY --from=build_app_environment /usr/local         /usr/local
 COPY --from=build_oauth           /opt/oauth-proxy   /opt/oauth-proxy
 COPY --from=build_reverse_proxy   /opt/reverse_proxy /opt/reverse_proxy
 
-RUN mkdir /app /data               \
- && groupadd application           \
-      --gid 1000                   \
- && useradd application            \
-      --base-dir /app              \
-      --home-dir /home/application \
-      --create-home                \
-      --uid 1000                   \
-      --gid 1000                   \
-      --system
-
 COPY ./config/init/supervisord.conf   /etc/supervisord.conf
 COPY ./config/init.sh                 /init.sh
 COPY ./config/oauth/oauth.sh          /opt/oauth-proxy/
 COPY ./config/reverse_proxy/Caddyfile /etc/Caddyfile
 
 EXPOSE 8080
-EXPOSE 4443
 
 COPY --chown=application:application ./app /app
-# RUN chown -R application: /app /data
 
 CMD bash /init.sh

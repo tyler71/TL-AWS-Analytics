@@ -1,17 +1,9 @@
 {
     # General Options
     http_port  8080
-    https_port 4443
-    on_demand_tls {
-        interval 10m
-        burst    3
-    }
 
 }
 
-https:// {
-    tls {
-        on_demand
-    }
+http:// {
     reverse_proxy localhost:4180
 }

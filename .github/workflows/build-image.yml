@@ -3,7 +3,7 @@ name: Build / Upload Docker ghcr.io
 on:
   push:
     branches:
-    - dev
+    - none
 
 jobs:
   deploy:
