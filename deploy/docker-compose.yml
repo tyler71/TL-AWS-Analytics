@@ -4,7 +4,7 @@ services:
   tl-analytics:
     image: ${IMAGE}
     environment:
-      APP_NAME: ${{ APP_NAME }}
+      APP_NAME: ${APP_NAME}
       BUCKET_NAME: ${BUCKET_NAME}
       BUCKET_PREFIX: ${BUCKET_PREFIX}
       CTR_RECORD_URL: ${CTR_RECORD_URL}
