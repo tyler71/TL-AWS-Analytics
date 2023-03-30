@@ -1,3 +1,7 @@
+permissions:
+  id-token: write
+  contents: read
+
 name: Build / Push AWS ECR; Deploy to EC2
 
 on:
@@ -16,8 +20,10 @@ jobs:
         id: aws-credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+#          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+#          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          role-to-assume: ${{ vars.ROLE_ARN }}
+          role-duration-seconds: 900
           aws-region: ${{ vars.AWS_DEFAULT_REGION }}
 
       - name: Login to Amazon ECR
